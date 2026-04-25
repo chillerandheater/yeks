@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -728,21 +727,20 @@ function exportPDF(){
     @media print{@page{size:144mm 204mm;margin:0;}.page{page-break-after:always;}}
   </style></head><body>`;
 
-for(let i=0;i<pageImages.length;i++){
-html+=`<div class="page"><img src="${pageImages[i]}"></div>`;
-}
-html+=`<script>window.onload=function(){window.print();}<\/script></body></html>`;
-win.document.write(html);
-win.document.close();
+  for(let i=0;i<pageImages.length;i++){
+    html+=`<div class="page"><img src="${pageImages[i]}"></div>`;
+  }
+  html+=`<script>window.onload=function(){window.print();}<\/script></body></html>`;
+  win.document.write(html);
+  win.document.close();
 
-st.textContent=`p${pgl(cur).join('·')}`;
-render();
-document.querySelectorAll(’.sthumb’).forEach(function(t,i){t.classList.toggle(‘on’,i===cur);});
+  st.textContent=`p${pgl(cur).join('·')}`;
+  render();
+  document.querySelectorAll('.sthumb').forEach(function(t,i){t.classList.toggle('on',i===cur);});
 }
 
 buildThumbs();
 render();
 </script>
-
 </body>
 </html>
