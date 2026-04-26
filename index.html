@@ -654,11 +654,17 @@ function exportPDF(){
   // 모든 페이지 JPEG 수집
   const pageJpegs=[];
   const N_PAGES=NS*2;
-  for(let si=0;si<NS;si++){
+  // PDF 페이지 순서: p1, p2, p3 ... p31, p32
+  // spread0 = [p32, p1] → right(p1) 먼저, 나머지 spreads 정상 순서, 마지막에 left(p32)
+  // spread1 = [p2, p3], spread2 = [p4, p5] ... spread15 = [p30, p31]
+  // 최종 순서: p1(s0-right), p2(s1-left), p3(s1-right), ... p30(s15-left), p31(s15-right), p32(s0-left)
+  pageJpegs.push(getPageJpeg(0,'right')); // p1
+  for(let si=1;si<NS;si++){
     pageJpegs.push(getPageJpeg(si,'left'));
     pageJpegs.push(getPageJpeg(si,'right'));
-    btn.textContent=`처리중 ${(si+1)*2}/${N_PAGES}`;
+    btn.textContent=`처리중 ${si*2+1}/${N_PAGES}`;
   }
+  pageJpegs.push(getPageJpeg(0,'left')); // p32 (마지막)
 
   // ── PDF 바이너리 직접 생성 ──
   // PDF는 바이너리 파일이므로 Uint8Array 배열로 조각을 모아 마지막에 합침
