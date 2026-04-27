@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>북 PDF 에디터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#4a4a4a;color:#eee;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -61,15 +64,48 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
   <div class="sep"></div>
   <label>폰트</label>
   <select id="sfont" onchange="applyTextStyle()">
-    <option value="serif">명조</option>
-    <option value="sans-serif">고딕</option>
-    <option value="monospace">모노</option>
-    <option value="Georgia">Georgia</option>
+    <optgroup label="── 한국어 ──">
+      <option value="'Nanum Gothic',sans-serif">나눔고딕</option>
+      <option value="'Nanum Myeongjo',serif">나눔명조</option>
+      <option value="'Noto Sans KR',sans-serif">Noto Sans KR</option>
+      <option value="'Noto Serif KR',serif">Noto Serif KR</option>
+      <option value="'Black Han Sans',sans-serif">블랙한산스</option>
+      <option value="'Nanum Pen Script',cursive">나눔펜</option>
+      <option value="'Gaegu',cursive">개구체</option>
+      <option value="'Sunflower',sans-serif">해바라기</option>
+    </optgroup>
+    <optgroup label="── 영문 ──">
+      <option value="'Playfair Display',serif">Playfair Display</option>
+      <option value="'Montserrat',sans-serif">Montserrat</option>
+      <option value="'Lato',sans-serif">Lato</option>
+      <option value="'Raleway',sans-serif">Raleway</option>
+      <option value="'Oswald',sans-serif">Oswald</option>
+      <option value="'Dancing Script',cursive">Dancing Script</option>
+    </optgroup>
+    <optgroup label="── 기본 ──">
+      <option value="serif">명조 (시스템)</option>
+      <option value="sans-serif">고딕 (시스템)</option>
+      <option value="monospace">모노스페이스</option>
+      <option value="Georgia,serif">Georgia</option>
+    </optgroup>
   </select>
   <label>크기</label>
   <input type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTextStyle()" style="width:50px">
   <label>색</label>
   <input type="color" id="scolor" value="#000000" onchange="applyTextStyle()">
+  <label>굵기</label>
+  <select id="sweight" onchange="applyTextStyle()" style="width:90px">
+    <option value="300">Light 300</option>
+    <option value="400" selected>Regular 400</option>
+    <option value="500">Medium 500</option>
+    <option value="700">Bold 700</option>
+    <option value="800">ExtraBold 800</option>
+  </select>
+  <label>스타일</label>
+  <select id="sstyle" onchange="applyTextStyle()" style="width:70px">
+    <option value="normal" selected>보통</option>
+    <option value="italic">이탤릭</option>
+  </select>
   <div class="sep"></div>
   <button class="tb on" id="btn-bleed" onclick="tog('bleed')">블리드</button>
   <button class="tb on" id="btn-art" onclick="tog('art')">아트보드</button>
@@ -255,7 +291,9 @@ function render(){
 function getBoundsInMM(el){
   if(el.type==='img') return{x:el.x,y:el.y,w:el.w,h:el.h};
   const fs=p(el.fs);
-  ctx.save(); ctx.font=`${fs}px ${el.ff}`; ctx.textBaseline='top';
+  const fw=el.fw||'400';
+  const fst=el.fst||'normal';
+  ctx.save(); ctx.font=`${fst} ${fw} ${fs}px ${el.ff}`; ctx.textBaseline='top';
   const lines=el.txt.split('\n');
   const tw=m(lines.reduce((a,b)=>Math.max(a,ctx.measureText(b).width),0));
   const th=el.fs*1.35*lines.length;
@@ -276,7 +314,9 @@ function drawEl(c,el,isSel){
     }
   } else {
     const fs=p(el.fs);
-    c.font=`${fs}px ${el.ff}`;
+    const fw=el.fw||'400';
+    const fst=el.fst||'normal';
+    c.font=`${fst} ${fw} ${fs}px ${el.ff}`;
     c.fillStyle=el.col; c.textBaseline='top';
     el.txt.split('\n').forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*fs*1.35));
     if(isSel){
@@ -422,7 +462,9 @@ cv.addEventListener('mousedown',function(e){
     const el={type:'txt',x:m(mx),y:m(my),txt:'텍스트 입력',
       ff:document.getElementById('sfont').value,
       fs:parseFloat(document.getElementById('ssize').value)||14,
-      col:document.getElementById('scolor').value};
+      col:document.getElementById('scolor').value,
+      fw:document.getElementById('sweight').value||'400',
+      fst:document.getElementById('sstyle').value||'normal'};
     spreads[cur].els.push(el);
     sel=el; setTool('select'); updatePanel(); render();
   }
@@ -467,6 +509,8 @@ function applyTextStyle(){
   sel.ff=document.getElementById('sfont').value;
   sel.fs=parseFloat(document.getElementById('ssize').value)||14;
   sel.col=document.getElementById('scolor').value;
+  sel.fw=document.getElementById('sweight').value||'400';
+  sel.fst=document.getElementById('sstyle').value||'normal';
   render();
 }
 
@@ -490,6 +534,8 @@ function updatePanel(){
     document.getElementById('sfont').value=sel.ff;
     document.getElementById('ssize').value=sel.fs;
     document.getElementById('scolor').value=sel.col;
+    document.getElementById('sweight').value=sel.fw||'400';
+    document.getElementById('sstyle').value=sel.fst||'normal';
   }
   const rs=document.getElementById('refsel');
   rs.innerHTML='<option value="">— 선택 —</option>';
