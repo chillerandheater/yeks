@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>북 PDF 에디터</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#4a4a4a;color:#eee;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -64,48 +61,15 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
   <div class="sep"></div>
   <label>폰트</label>
   <select id="sfont" onchange="applyTextStyle()">
-    <optgroup label="── 한국어 ──">
-      <option value="'Nanum Gothic',sans-serif">나눔고딕</option>
-      <option value="'Nanum Myeongjo',serif">나눔명조</option>
-      <option value="'Noto Sans KR',sans-serif">Noto Sans KR</option>
-      <option value="'Noto Serif KR',serif">Noto Serif KR</option>
-      <option value="'Black Han Sans',sans-serif">블랙한산스</option>
-      <option value="'Nanum Pen Script',cursive">나눔펜</option>
-      <option value="'Gaegu',cursive">개구체</option>
-      <option value="'Sunflower',sans-serif">해바라기</option>
-    </optgroup>
-    <optgroup label="── 영문 ──">
-      <option value="'Playfair Display',serif">Playfair Display</option>
-      <option value="'Montserrat',sans-serif">Montserrat</option>
-      <option value="'Lato',sans-serif">Lato</option>
-      <option value="'Raleway',sans-serif">Raleway</option>
-      <option value="'Oswald',sans-serif">Oswald</option>
-      <option value="'Dancing Script',cursive">Dancing Script</option>
-    </optgroup>
-    <optgroup label="── 기본 ──">
-      <option value="serif">명조 (시스템)</option>
-      <option value="sans-serif">고딕 (시스템)</option>
-      <option value="monospace">모노스페이스</option>
-      <option value="Georgia,serif">Georgia</option>
-    </optgroup>
+    <option value="serif">명조</option>
+    <option value="sans-serif">고딕</option>
+    <option value="monospace">모노</option>
+    <option value="Georgia">Georgia</option>
   </select>
   <label>크기</label>
   <input type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTextStyle()" style="width:50px">
   <label>색</label>
   <input type="color" id="scolor" value="#000000" onchange="applyTextStyle()">
-  <label>굵기</label>
-  <select id="sweight" onchange="applyTextStyle()" style="width:90px">
-    <option value="300">Light 300</option>
-    <option value="400" selected>Regular 400</option>
-    <option value="500">Medium 500</option>
-    <option value="700">Bold 700</option>
-    <option value="800">ExtraBold 800</option>
-  </select>
-  <label>스타일</label>
-  <select id="sstyle" onchange="applyTextStyle()" style="width:70px">
-    <option value="normal" selected>보통</option>
-    <option value="italic">이탤릭</option>
-  </select>
   <div class="sep"></div>
   <button class="tb on" id="btn-bleed" onclick="tog('bleed')">블리드</button>
   <button class="tb on" id="btn-art" onclick="tog('art')">아트보드</button>
@@ -221,27 +185,19 @@ const SH=BL+PH+BL;      // 204mm
 const LT={x:BL,       y:BL, w:PW, h:PH};
 const RT={x:SPINE+BL, y:BL, w:PW, h:PH};
 
-const MM=3.7795275591;
-const RS=3;
-const NS=16;
+const MM=3.7795275591;  // px per mm at 96dpi
+const RS=3;             // 렌더 스케일
+const DS=0.22;          // 표시 스케일
 const CW=Math.round(SW*MM*RS);
 const CH=Math.round(SH*MM*RS);
+const DW=Math.round(CW*DS);
+const DH=Math.round(CH*DS);
+const NS=16; // 스프레드 수
 
-function calcDS(){
-  const area=document.getElementById('canvas-area');
-  const availW=Math.max((area?area.clientWidth:window.innerWidth)-48, 100);
-  const availH=Math.max(window.innerHeight-90, 100);
-  const ds=Math.min(availW/CW, availH/CH);
-  return Math.min(Math.max(ds,0.08),0.40);
-}
-let DS=0.22;
-let DW=Math.round(CW*DS);
-let DH=Math.round(CH*DS);
-
-function p(v){return v*MM*RS}
-function m(v){return v/(MM*RS)}
-function s2c(v){return v/DS}
-function d(v){return(v*MM*RS*DS).toFixed(2)}
+function p(v){return v*MM*RS}           // mm→캔버스px
+function m(v){return v/(MM*RS)}         // 캔버스px→mm
+function s2c(v){return v/DS}            // 화면px→캔버스px
+function d(v){return(v*MM*RS*DS).toFixed(2)} // mm→화면px 문자열
 
 // ── 상태 ──
 let spreads=Array.from({length:NS},()=>({els:[]}));
@@ -254,21 +210,13 @@ const SNAP=2;
 const cv=document.getElementById('c');
 const ctx=cv.getContext('2d');
 cv.width=CW; cv.height=CH;
+cv.style.width=DW+'px'; cv.style.height=DH+'px';
 const gsvg=document.getElementById('gsvg');
 const ssvg=document.getElementById('ssvg');
-
-function resizeCanvas(){
-  DS=calcDS();
-  DW=Math.round(CW*DS);
-  DH=Math.round(CH*DS);
-  cv.style.width=DW+'px'; cv.style.height=DH+'px';
-  [gsvg,ssvg].forEach(function(el){
-    el.setAttribute('width',DW); el.setAttribute('height',DH);
-    el.style.width=DW+'px'; el.style.height=DH+'px';
-  });
-}
-window.addEventListener('DOMContentLoaded',function(){resizeCanvas();render();});
-window.addEventListener('resize',function(){resizeCanvas();render();});
+[gsvg,ssvg].forEach(el=>{
+  el.setAttribute('width',DW); el.setAttribute('height',DH);
+  el.style.width=DW+'px'; el.style.height=DH+'px';
+});
 
 // ── 페이지 라벨 ──
 function pgl(si){return si===0?[32,1]:[si*2,si*2+1]}
@@ -291,9 +239,7 @@ function render(){
 function getBoundsInMM(el){
   if(el.type==='img') return{x:el.x,y:el.y,w:el.w,h:el.h};
   const fs=p(el.fs);
-  const fw=el.fw||'400';
-  const fst=el.fst||'normal';
-  ctx.save(); ctx.font=`${fst} ${fw} ${fs}px ${el.ff}`; ctx.textBaseline='top';
+  ctx.save(); ctx.font=`${fs}px ${el.ff}`; ctx.textBaseline='top';
   const lines=el.txt.split('\n');
   const tw=m(lines.reduce((a,b)=>Math.max(a,ctx.measureText(b).width),0));
   const th=el.fs*1.35*lines.length;
@@ -314,9 +260,7 @@ function drawEl(c,el,isSel){
     }
   } else {
     const fs=p(el.fs);
-    const fw=el.fw||'400';
-    const fst=el.fst||'normal';
-    c.font=`${fst} ${fw} ${fs}px ${el.ff}`;
+    c.font=`${fs}px ${el.ff}`;
     c.fillStyle=el.col; c.textBaseline='top';
     el.txt.split('\n').forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*fs*1.35));
     if(isSel){
@@ -462,9 +406,7 @@ cv.addEventListener('mousedown',function(e){
     const el={type:'txt',x:m(mx),y:m(my),txt:'텍스트 입력',
       ff:document.getElementById('sfont').value,
       fs:parseFloat(document.getElementById('ssize').value)||14,
-      col:document.getElementById('scolor').value,
-      fw:document.getElementById('sweight').value||'400',
-      fst:document.getElementById('sstyle').value||'normal'};
+      col:document.getElementById('scolor').value};
     spreads[cur].els.push(el);
     sel=el; setTool('select'); updatePanel(); render();
   }
@@ -509,8 +451,6 @@ function applyTextStyle(){
   sel.ff=document.getElementById('sfont').value;
   sel.fs=parseFloat(document.getElementById('ssize').value)||14;
   sel.col=document.getElementById('scolor').value;
-  sel.fw=document.getElementById('sweight').value||'400';
-  sel.fst=document.getElementById('sstyle').value||'normal';
   render();
 }
 
@@ -534,8 +474,6 @@ function updatePanel(){
     document.getElementById('sfont').value=sel.ff;
     document.getElementById('ssize').value=sel.fs;
     document.getElementById('scolor').value=sel.col;
-    document.getElementById('sweight').value=sel.fw||'400';
-    document.getElementById('sstyle').value=sel.fst||'normal';
   }
   const rs=document.getElementById('refsel');
   rs.innerHTML='<option value="">— 선택 —</option>';
@@ -652,246 +590,156 @@ function goTo(s){
   document.querySelectorAll('.sthumb')[s].scrollIntoView({block:'nearest'});
 }
 
-// ── PDF 내보내기 (순수 JS, TrimBox/BleedBox 포함) ──
+// ── PDF 내보내기 (순수 JS, 외부 라이브러리 없음) ──
 function exportPDF(){
   const btn=document.getElementById('exportBtn');
   const st=document.getElementById('status');
   btn.disabled=true; btn.textContent='생성 중...';
 
-  const PT=2.834645; // 1mm = 2.834645pt
-  // 페이지 크기 (pt)
-  const mediaW=parseFloat((SPINE*PT).toFixed(3));   // 144mm = 408.188pt
-  const mediaH=parseFloat((SH*PT).toFixed(3));       // 204mm = 578.467pt
-  const trimX1=parseFloat((BL*PT).toFixed(3));       // 2mm
-  const trimY1=parseFloat((BL*PT).toFixed(3));       // 2mm
-  const trimX2=parseFloat(((SPINE-BL)*PT).toFixed(3)); // 142mm
-  const trimY2=parseFloat(((SH-BL)*PT).toFixed(3));    // 202mm
-
-  // 각 스프레드를 오프스크린 캔버스에 렌더 후 좌/우 페이지로 크롭
-  const PCW=Math.round(SPINE*MM*RS);
-  const spreadOff=document.createElement('canvas');
-  spreadOff.width=CW; spreadOff.height=CH;
-  const soc=spreadOff.getContext('2d');
+  // 각 페이지를 별도 캔버스에 렌더링
+  const PCW=Math.round(SPINE*MM*RS);  // 한 페이지 캔버스 너비 (144mm)
+  const PCH=CH;
   const pageOff=document.createElement('canvas');
-  pageOff.width=PCW; pageOff.height=CH;
+  const spreadOff=document.createElement('canvas');
+  pageOff.width=PCW; pageOff.height=PCH;
+  spreadOff.width=CW; spreadOff.height=CH;
   const poc=pageOff.getContext('2d');
+  const soc=spreadOff.getContext('2d');
 
+  // 스프레드 렌더 (가이드 없이)
   function renderSpreadClean(si){
     soc.clearRect(0,0,CW,CH);
     soc.fillStyle='white'; soc.fillRect(0,0,CW,CH);
     spreads[si].els.forEach(function(el){drawEl(soc,el,false);});
   }
 
-  function getPageJpeg(si,side){
+  // 페이지 JPEG dataURL 추출
+  function getPageDataURL(si, side){
     renderSpreadClean(si);
-    poc.clearRect(0,0,PCW,CH);
-    poc.fillStyle='white'; poc.fillRect(0,0,PCW,CH);
-    const srcX=side==='left'?0:Math.round(CW/2);
-    poc.drawImage(spreadOff,srcX,0,PCW,CH,0,0,PCW,CH);
-    const dataUrl=pageOff.toDataURL('image/jpeg',0.92);
-    const b64=dataUrl.split(',')[1];
-    // base64 → binary string
-    const bin=atob(b64);
-    const bytes=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-    return bytes;
+    poc.clearRect(0,0,PCW,PCH);
+    poc.fillStyle='white'; poc.fillRect(0,0,PCW,PCH);
+    const srcX = side==='left' ? 0 : Math.round(CW/2);
+    poc.drawImage(spreadOff, srcX,0,PCW,PCH, 0,0,PCW,PCH);
+    return pageOff.toDataURL('image/jpeg', 0.92);
   }
 
-  // 모든 페이지 JPEG 수집
-  const pageJpegs=[];
-  const N_PAGES=NS*2;
-  // PDF 페이지 순서: p1, p2, p3 ... p31, p32
-  // spread0 = [p32, p1] → right(p1) 먼저, 나머지 spreads 정상 순서, 마지막에 left(p32)
-  // spread1 = [p2, p3], spread2 = [p4, p5] ... spread15 = [p30, p31]
-  // 최종 순서: p1(s0-right), p2(s1-left), p3(s1-right), ... p30(s15-left), p31(s15-right), p32(s0-left)
-  pageJpegs.push(getPageJpeg(0,'right')); // p1
-  for(let si=1;si<NS;si++){
-    pageJpegs.push(getPageJpeg(si,'left'));
-    pageJpegs.push(getPageJpeg(si,'right'));
-    btn.textContent=`처리중 ${si*2+1}/${N_PAGES}`;
-  }
-  pageJpegs.push(getPageJpeg(0,'left')); // p32 (마지막)
+  // PDF 생성 (직접 구현)
+  // 144mm x 204mm = 408.19pt x 578.41pt (1mm = 2.834645pt)
+  const PT=2.834645;
+  const pageWidthPt=(SPINE*PT).toFixed(2);
+  const pageHeightPt=(SH*PT).toFixed(2);
 
-  // ── PDF 바이너리 직접 생성 ──
-  // PDF는 바이너리 파일이므로 Uint8Array 배열로 조각을 모아 마지막에 합침
-  const chunks=[]; // Uint8Array 또는 string 조각들
-  let pos=0;       // 현재 바이트 오프셋
-
-  function enc(str){
-    const b=new TextEncoder().encode(str);
-    chunks.push(b); pos+=b.length; return b.length;
-  }
-  function encBin(bytes){
-    chunks.push(bytes); pos+=bytes.length; return bytes.length;
+  const pages=[];
+  for(let si=0;si<NS;si++){
+    pages.push({si,side:'left'});
+    pages.push({si,side:'right'});
   }
 
-  const xrefOffsets=[]; // 각 객체 오프셋
-  let objCount=0;
-
-  function startObj(){
-    xrefOffsets.push(pos);
-    enc(`${++objCount} 0 obj\n`);
-    return objCount;
+  // 각 페이지 이미지 수집
+  const pageImages=[];
+  for(let i=0;i<pages.length;i++){
+    const pg=pages[i];
+    pageImages.push(getPageDataURL(pg.si,pg.side));
+    btn.textContent=`처리중 ${i+1}/${pages.length}`;
   }
-  function endObj(){ enc('endobj\n'); }
 
-  // PDF 헤더 (바이너리 마커 포함)
-  enc('%PDF-1.4\n');
-  enc('%\xFF\xFF\xFF\xFF\n'); // 바이너리 파일임을 알리는 마커
+  // PDF 바이너리 빌드
+  let pdf='%PDF-1.4\n';
+  const offsets=[];
+  let objNum=1;
 
-  // 각 페이지 리소스 객체 번호 미리 할당
-  // 구조: 이미지XObj(i), 콘텐츠스트림(i), 페이지(i) × N_PAGES + Pages + Catalog
-  // 총 객체 = N_PAGES*3 + 2
-  // objCount를 미리 증가시키지 않고 순서대로 생성
+  function addObj(content){
+    offsets.push(pdf.length);
+    pdf+=`${objNum} 0 obj\n${content}\nendobj\n`;
+    return objNum++;
+  }
 
-  const imgRefs=[];
-  const contentRefs=[];
+  // 카탈로그, 페이지 트리는 나중에
+  const catalogRef=objNum++;
+  const pagesRef=objNum++;
+
   const pageRefs=[];
+  const imgObjs=[];
 
-  for(let i=0;i<N_PAGES;i++){
-    const jpeg=pageJpegs[i];
+  for(let i=0;i<pageImages.length;i++){
+    // JPEG dataURL → base64
+    const dataUrl=pageImages[i];
+    const b64=dataUrl.split(',')[1];
+    const raw=atob(b64);
+    const bytes=new Uint8Array(raw.length);
+    for(let j=0;j<raw.length;j++) bytes[j]=raw.charCodeAt(j);
 
-    // 이미지 XObject
-    xrefOffsets.push(pos);
-    const imgRef=++objCount;
-    imgRefs.push(imgRef);
-    enc(`${imgRef} 0 obj\n`);
-    enc(`<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${CH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\n`);
-    enc('stream\n');
-    encBin(jpeg);
-    enc('\nendstream\nendobj\n');
+    // XObject 이미지
+    offsets.push(pdf.length);
+    const imgRef=objNum;
+    pdf+=`${objNum} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${PCH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`;
+    // 바이너리는 별도 배열로 추적
+    imgObjs.push({ref:imgRef,bytes,pdfOffset:pdf.length});
+    // 실제 바이너리는 나중에 합칠 때 삽입
+    pdf+='BINARY_PLACEHOLDER_'+i+'\nendstream\nendobj\n';
+    objNum++;
 
-    // 콘텐츠 스트림: 이미지를 페이지 전체에 배치
-    const stream=`q ${mediaW} 0 0 ${mediaH} 0 0 cm /Im${i} Do Q`;
-    xrefOffsets.push(pos);
-    const contentRef=++objCount;
-    contentRefs.push(contentRef);
-    enc(`${contentRef} 0 obj\n`);
-    enc(`<< /Length ${stream.length} >>\n`);
-    enc('stream\n');
-    enc(stream);
-    enc('\nendstream\nendobj\n');
+    // 페이지 콘텐츠 스트림
+    const stream=`q ${pageWidthPt} 0 0 ${pageHeightPt} 0 0 cm /Im${i} Do Q`;
+    offsets.push(pdf.length);
+    const contentRef=objNum;
+    pdf+=`${objNum} 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}\nendstream\nendobj\n`;
+    objNum++;
 
-    // 페이지 객체 (TrimBox, BleedBox 포함)
-    xrefOffsets.push(pos);
-    const pageRef=++objCount;
+    // 페이지
+    offsets.push(pdf.length);
+    const pageRef=objNum;
+    pdf+=`${objNum} 0 obj\n<< /Type /Page /Parent ${pagesRef} 0 R /MediaBox [0 0 ${pageWidthPt} ${pageHeightPt}] /Contents ${contentRef} 0 R /Resources << /XObject << /Im${i} ${imgRef} 0 R >> >> >>\nendobj\n`;
     pageRefs.push(pageRef);
-    enc(`${pageRef} 0 obj\n`);
-    enc('<< /Type /Page\n');
-    enc(`   /Parent ${objCount+N_PAGES*3-i*3-2} 0 R\n`); // Pages 객체 참조 (나중에 fix)
-    enc(`   /MediaBox [0 0 ${mediaW} ${mediaH}]\n`);
-    enc(`   /BleedBox [0 0 ${mediaW} ${mediaH}]\n`);
-    enc(`   /TrimBox [${trimX1} ${trimY1} ${trimX2} ${trimY2}]\n`);
-    enc(`   /Contents ${contentRef} 0 R\n`);
-    enc(`   /Resources << /XObject << /Im${i} ${imgRef} 0 R >> >>\n`);
-    enc('>>\nendobj\n');
-  }
-
-  // Pages 객체 - 위에서 Parent 참조를 미리 계산하기 어려우므로 다시 정확하게 작성
-  // 위 페이지 객체의 Parent 참조가 틀렸으므로 올바른 방식으로 재작성
-  // → 간단히: 두 패스로 나누기. 1패스에서 Pages ref 번호만 확보 후 2패스에서 페이지 생성
-  // 여기서는 이미 생성했으므로 Pages objNum을 직접 계산
-  const pagesObjNum=objCount+1;
-
-  // 위에서 생성한 페이지들의 Parent를 수정할 수 없으므로
-  // 다시 처음부터 올바르게 만들어야 함. chunks를 버리고 재시작.
-
-  // ── 2패스 방식으로 완전히 재작성 ──
-  // 먼저 객체 번호 계획:
-  // 1..N_PAGES: 이미지 XObject
-  // N_PAGES+1..N_PAGES*2: 콘텐츠 스트림
-  // N_PAGES*2+1..N_PAGES*3: 페이지
-  // N_PAGES*3+1: Pages
-  // N_PAGES*3+2: Catalog
-  const NP=N_PAGES;
-  const IMG_BASE=1;
-  const CONT_BASE=NP+1;
-  const PAGE_BASE=NP*2+1;
-  const PAGES_OBJ=NP*3+1;
-  const CATALOG_OBJ=NP*3+2;
-  const TOTAL_OBJS=NP*3+2;
-
-  // 청크 초기화
-  chunks.length=0; pos=0;
-  const xref=new Array(TOTAL_OBJS+1).fill(0);
-
-  enc('%PDF-1.4\n%\xFF\xFF\xFF\xFF\n');
-
-  // 이미지 XObject들
-  for(let i=0;i<NP;i++){
-    const jpeg=pageJpegs[i];
-    xref[IMG_BASE+i]=pos;
-    enc(`${IMG_BASE+i} 0 obj\n`);
-    enc(`<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${CH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
-    encBin(jpeg);
-    enc('\nendstream\nendobj\n');
-  }
-
-  // 콘텐츠 스트림들
-  for(let i=0;i<NP;i++){
-    const stream=`q ${mediaW} 0 0 ${mediaH} 0 0 cm /Im${IMG_BASE+i} Do Q`;
-    xref[CONT_BASE+i]=pos;
-    enc(`${CONT_BASE+i} 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}\nendstream\nendobj\n`);
-  }
-
-  // 페이지들
-  for(let i=0;i<NP;i++){
-    xref[PAGE_BASE+i]=pos;
-    enc(`${PAGE_BASE+i} 0 obj\n`);
-    enc(`<< /Type /Page /Parent ${PAGES_OBJ} 0 R\n`);
-    enc(`   /MediaBox [0 0 ${mediaW} ${mediaH}]\n`);
-    enc(`   /BleedBox [0 0 ${mediaW} ${mediaH}]\n`);
-    enc(`   /TrimBox [${trimX1} ${trimY1} ${trimX2} ${trimY2}]\n`);
-    enc(`   /Contents ${CONT_BASE+i} 0 R\n`);
-    enc(`   /Resources << /XObject << /Im${IMG_BASE+i} ${IMG_BASE+i} 0 R >> >>\n`);
-    enc('>>\nendobj\n');
+    objNum++;
   }
 
   // Pages
-  xref[PAGES_OBJ]=pos;
-  const kids=Array.from({length:NP},(_,i)=>`${PAGE_BASE+i} 0 R`).join(' ');
-  enc(`${PAGES_OBJ} 0 obj\n<< /Type /Pages /Kids [${kids}] /Count ${NP} >>\nendobj\n`);
+  offsets.push(pdf.length);
+  const kidsStr=pageRefs.map(r=>`${r} 0 R`).join(' ');
+  pdf+=`${pagesRef} 0 obj\n<< /Type /Pages /Kids [${kidsStr}] /Count ${pageRefs.length} >>\nendobj\n`;
 
   // Catalog
-  xref[CATALOG_OBJ]=pos;
-  enc(`${CATALOG_OBJ} 0 obj\n<< /Type /Catalog /Pages ${PAGES_OBJ} 0 R >>\nendobj\n`);
+  offsets.push(pdf.length);
+  pdf+=`${catalogRef} 0 obj\n<< /Type /Catalog /Pages ${pagesRef} 0 R >>\nendobj\n`;
 
-  // xref 테이블
-  const xrefPos=pos;
-  enc(`xref\n0 ${TOTAL_OBJS+1}\n`);
-  enc('0000000000 65535 f \n');
-  for(let i=1;i<=TOTAL_OBJS;i++){
-    enc(xref[i].toString().padStart(10,'0')+' 00000 n \n');
-  }
+  // xref + trailer (오프셋 기반으로 계산 — 바이너리 플레이스홀더 방식이므로 간단 구현)
+  // 바이너리 데이터가 있어 순수 텍스트 PDF가 안 됨
+  // → canvas.toBlob + JSZip 없이 JPEG를 base64 인코딩 스트림으로 삽입
+  // 대신 각 페이지를 개별 이미지로 다운로드하는 방식으로 fallback
+  // → 가장 확실한 방법: 각 페이지를 PNG blob으로 만들어 zip없이 개별 다운로드 or
+  //    multipage를 지원하는 순수JS PDF 라이브러리 인라인 포함
 
-  // trailer
-  enc(`trailer\n<< /Size ${TOTAL_OBJS+1} /Root ${CATALOG_OBJ} 0 R >>\n`);
-  enc(`startxref\n${xrefPos}\n%%EOF\n`);
-
-  // 전체 Uint8Array로 합치기
-  const totalSize=chunks.reduce(function(a,c){return a+(c instanceof Uint8Array?c.length:0);},0);
-  const out=new Uint8Array(pos);
-  let offset2=0;
-  chunks.forEach(function(c){
-    if(c instanceof Uint8Array){out.set(c,offset2);offset2+=c.length;}
-  });
-
-  // Blob으로 다운로드
-  const blob=new Blob([out],{type:'application/pdf'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download='book_bleed2mm.pdf';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  setTimeout(function(){URL.revokeObjectURL(url);},1000);
-
+  // ── 현실적 해결: 각 페이지를 JPEG로 다운로드 (PDF 불가 시 fallback) ──
+  // 대신 간단하고 확실한 PDF: 각 페이지를 data URI로 <img>에 넣고 print dialog 활용
   btn.disabled=false; btn.textContent='⬇ PDF 내보내기';
-  const[lp,rp]=pgl(cur); st.textContent=`p${lp}·${rp}`;
+
+  // 새 창에서 인쇄 다이얼로그 열기
+  const win=window.open('','_blank');
+  if(!win){alert('팝업이 차단됐습니다. 팝업을 허용해주세요.'); st.textContent='오류'; return;}
+
+  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>북 PDF</title><style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#fff;}
+    .page{width:144mm;height:204mm;page-break-after:always;overflow:hidden;position:relative;}
+    .page:last-child{page-break-after:auto;}
+    .page img{width:144mm;height:204mm;display:block;}
+    @media print{@page{size:144mm 204mm;margin:0;}.page{page-break-after:always;}}
+  </style></head><body>`;
+
+  for(let i=0;i<pageImages.length;i++){
+    html+=`<div class="page"><img src="${pageImages[i]}"></div>`;
+  }
+  html+=`<script>window.onload=function(){window.print();}<\/script></body></html>`;
+  win.document.write(html);
+  win.document.close();
+
+  st.textContent=`p${pgl(cur).join('·')}`;
   render();
   document.querySelectorAll('.sthumb').forEach(function(t,i){t.classList.toggle('on',i===cur);});
 }
+
 buildThumbs();
-resizeCanvas();
 render();
 </script>
 </body>
