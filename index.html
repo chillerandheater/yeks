@@ -114,21 +114,20 @@ body.is-mobile #main{padding-bottom:0}
 #text-overlay.show{display:flex}
 #text-box{
   background:#1e1e1e;border-radius:14px 14px 0 0;
-  padding:14px 14px 0;width:100%;max-width:640px;
-  display:flex;flex-direction:column;
+  padding:14px;width:100%;max-width:640px;
+  /* 키보드 높이만큼 올라오도록 */
+  padding-bottom:env(keyboard-inset-height, 14px);
 }
-#text-box h3{font-size:13px;color:#aaa;margin-bottom:8px;flex-shrink:0}
+#text-box h3{font-size:13px;color:#aaa;margin-bottom:8px}
 #text-input{
   width:100%;background:#111;border:1px solid #444;
   border-radius:8px;padding:10px;color:#eee;font-size:16px;
-  height:100px;resize:none;outline:none;font-family:inherit;flex-shrink:0;
+  height:80px;resize:none;outline:none;font-family:inherit;display:block;
 }
 #text-box-btns{
-  display:flex;gap:8px;padding:10px 0 14px;flex-shrink:0;
-  /* 키보드 올라와도 버튼이 보이도록 */
-  position:sticky;bottom:0;background:#1e1e1e;
+  display:flex;gap:8px;margin-top:10px;
 }
-#text-box-btns button{flex:1;padding:13px;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600}
+#text-box-btns button{flex:1;padding:14px;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600}
 #text-cancel{background:#2a2a2a;color:#aaa}
 #text-confirm{background:#1a56db;color:#fff}
 
@@ -654,15 +653,32 @@ cv.addEventListener('touchend',e=>{
 // ── 텍스트 오버레이 ──
 function openTextOverlay(txt){
   const input=document.getElementById('text-input');
+  const box=document.getElementById('text-box');
   input.value=txt;
   document.getElementById('text-overlay').classList.add('show');
-  setTimeout(()=>{
-    input.focus();
-    // 키보드 올라올때 버튼 위로 밀기
-    input.scrollIntoView({block:'nearest'});
-  },100);
+
+  // visualViewport로 키보드 높이 감지해서 박스 올리기
+  function adjustForKeyboard(){
+    if(window.visualViewport){
+      const kbH=window.innerHeight - window.visualViewport.height;
+      box.style.marginBottom = kbH>0 ? kbH+'px' : '0';
+    }
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', adjustForKeyboard);
+    window.visualViewport.addEventListener('scroll', adjustForKeyboard);
+  }
+
+  setTimeout(()=>{ input.focus(); },80);
 }
-function closeTextOverlay(){document.getElementById('text-overlay').classList.remove('show');}
+function closeTextOverlay(){
+  document.getElementById('text-overlay').classList.remove('show');
+  document.getElementById('text-box').style.marginBottom='0';
+  if(window.visualViewport){
+    window.visualViewport.onresize=null;
+    window.visualViewport.onscroll=null;
+  }
+}
 function confirmText(){
   const txt=document.getElementById('text-input').value;
   if(!txt.trim()){closeTextOverlay();return;}
