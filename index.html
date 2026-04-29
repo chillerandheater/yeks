@@ -9,8 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#eee;display:flex;flex-direction:column;font-size:12px}
-body.is-mobile{padding-top:40px;padding-bottom:56px}
-body.is-mobile #main{padding-bottom:0}
 
 /* ── 데스크탑 툴바 ── */
 #toolbar{background:#242424;border-bottom:1px solid #111;flex-shrink:0}
@@ -68,19 +66,17 @@ body.is-mobile #main{padding-bottom:0}
 #no-sel{font-size:10px;color:#555;line-height:1.8}
 
 /* ── 모바일 상단 바 ── */
-#m-topbar{display:none;position:fixed;top:0;left:0;right:0;align-items:center;gap:5px;padding:0 8px;background:#242424;border-bottom:1px solid #111;overflow-x:auto;scrollbar-width:none;height:40px;z-index:1000}
+#m-topbar{display:none;align-items:center;gap:5px;padding:0 8px;background:#242424;border-bottom:1px solid #111;flex-shrink:0;overflow-x:auto;scrollbar-width:none;height:40px}
 #m-topbar::-webkit-scrollbar{display:none}
 #m-topbar .tb{height:26px;font-size:10px;padding:0 7px}
 
 /* ── 모바일 하단 탭바 ── */
 #m-tabbar{
   display:none;
-  position:fixed;
-  bottom:0;left:0;right:0;
+  flex-shrink:0;
   height:56px;
   background:#1a1a1a;
-  border-top:1px solid #333;
-  z-index:1000;
+  border-top:1px solid #111;
 }
 .m-tab{
   flex:1;display:flex;flex-direction:column;
@@ -108,35 +104,23 @@ body.is-mobile #main{padding-bottom:0}
 /* ── 텍스트 입력 오버레이 ── */
 #text-overlay{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.6);z-index:600;
+  background:rgba(0,0,0,.75);z-index:600;
   align-items:flex-end;justify-content:center;
 }
 #text-overlay.show{display:flex}
-#text-box{
-  background:#1e1e1e;border-radius:14px 14px 0 0;
-  padding:14px;width:100%;max-width:640px;
-  /* 키보드 높이만큼 올라오도록 */
-  padding-bottom:env(keyboard-inset-height, 14px);
-}
-#text-box h3{font-size:13px;color:#aaa;margin-bottom:8px}
-#text-input{
-  width:100%;background:#111;border:1px solid #444;
-  border-radius:8px;padding:10px;color:#eee;font-size:16px;
-  height:80px;resize:none;outline:none;font-family:inherit;display:block;
-}
-#text-box-btns{
-  display:flex;gap:8px;margin-top:10px;
-}
-#text-box-btns button{flex:1;padding:14px;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600}
+#text-box{background:#1e1e1e;border-radius:14px 14px 0 0;padding:16px;width:100%;max-width:640px}
+#text-box h3{font-size:13px;color:#aaa;margin-bottom:10px}
+#text-input{width:100%;background:#111;border:1px solid #444;border-radius:8px;padding:10px;color:#eee;font-size:16px;min-height:80px;resize:none;outline:none;font-family:inherit}
+#text-box-btns{display:flex;gap:8px;margin-top:10px}
+#text-box-btns button{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600}
 #text-cancel{background:#2a2a2a;color:#aaa}
 #text-confirm{background:#1a56db;color:#fff}
 
 /* ── 모바일 PDF 버튼 ── */
 #m-export-btn{
-  display:none;position:fixed;top:44px;right:8px;z-index:1001;
+  display:none;position:absolute;top:6px;right:6px;z-index:10;
   background:#1a7a1a;color:#fff;border:none;border-radius:14px;
-  padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;
 }
 </style>
 </head>
@@ -335,60 +319,40 @@ const ssvg=document.getElementById('ssvg');
 
 // ── 레이아웃 초기화 (핵심 함수) ──
 function initLayout(){
-  const w = window.innerWidth;
-  isMobile = w <= 1100;
+  isMobile=('ontouchstart' in window)||window.innerWidth<900;
 
-  const ids_desktop = ['toolbar','panel-left','panel-right'];
-  const ids_mobile  = ['m-topbar','m-tabbar','m-export-btn'];
-
-  if(w > 1100){
-    // 데스크탑
-    document.body.classList.remove('is-mobile');
-    ids_desktop.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.style.display='';
-    });
-    ids_mobile.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
-    const ca=document.getElementById('canvas-area');
-    if(ca){ca.style.padding='14px';ca.style.overflow='auto';}
+  if(isMobile){
+    // 모바일: 데스크탑 요소 숨김
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('panel-left').style.display='none';
+    document.getElementById('panel-right').style.display='none';
+    // 모바일 요소 표시
+    document.getElementById('m-topbar').style.display='flex';
+    document.getElementById('m-tabbar').style.display='flex';
+    document.getElementById('m-export-btn').style.display='block';
+    document.getElementById('canvas-area').style.padding='4px';
+    document.getElementById('canvas-area').style.justifyContent='flex-start';
+    document.getElementById('canvas-area').style.overflow='hidden';
   } else {
-    // 모바일
-    document.body.classList.add('is-mobile');
-    ids_desktop.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
-    // 모바일 요소 강제 표시
-    const topbar=document.getElementById('m-topbar');
-    if(topbar) topbar.style.display='flex';
-
-    const tabbar=document.getElementById('m-tabbar');
-    if(tabbar) tabbar.style.display='flex';
-
-    const mexp=document.getElementById('m-export-btn');
-    if(mexp) mexp.style.display='block';
-
-    const ca=document.getElementById('canvas-area');
-    if(ca){ca.style.padding='4px';ca.style.overflow='hidden';}
-
-    const pr=document.getElementById('panel-right');
-    if(pr) pr.style.display = w > 680 ? 'block' : 'none';
+    document.getElementById('toolbar').style.display='block';
+    document.getElementById('panel-left').style.display='block';
+    document.getElementById('panel-right').style.display='block';
+    document.getElementById('m-topbar').style.display='none';
+    document.getElementById('m-tabbar').style.display='none';
+    document.getElementById('m-export-btn').style.display='none';
   }
   updateDS();
 }
 
 function updateDS(){
-  const area=document.getElementById('canvas-area');
-  const r=area.getBoundingClientRect();
   if(isMobile){
     const topH=40,tabH=56,pad=10;
-    const availW=Math.max(r.width-pad,100);
-    const availH=Math.max(window.innerHeight-topH-tabH-pad,100);
+    const availW=window.innerWidth-pad;
+    const availH=window.innerHeight-topH-tabH-pad;
     DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.6);
   } else {
+    const area=document.getElementById('canvas-area');
+    const r=area.getBoundingClientRect();
     const availW=Math.max(r.width-28,100);
     const availH=Math.max(r.height-50,100);
     DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.45);
@@ -652,33 +616,11 @@ cv.addEventListener('touchend',e=>{
 
 // ── 텍스트 오버레이 ──
 function openTextOverlay(txt){
-  const input=document.getElementById('text-input');
-  const box=document.getElementById('text-box');
-  input.value=txt;
+  document.getElementById('text-input').value=txt;
   document.getElementById('text-overlay').classList.add('show');
-
-  // visualViewport로 키보드 높이 감지해서 박스 올리기
-  function adjustForKeyboard(){
-    if(window.visualViewport){
-      const kbH=window.innerHeight - window.visualViewport.height;
-      box.style.marginBottom = kbH>0 ? kbH+'px' : '0';
-    }
-  }
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', adjustForKeyboard);
-    window.visualViewport.addEventListener('scroll', adjustForKeyboard);
-  }
-
-  setTimeout(()=>{ input.focus(); },80);
+  setTimeout(()=>document.getElementById('text-input').focus(),80);
 }
-function closeTextOverlay(){
-  document.getElementById('text-overlay').classList.remove('show');
-  document.getElementById('text-box').style.marginBottom='0';
-  if(window.visualViewport){
-    window.visualViewport.onresize=null;
-    window.visualViewport.onscroll=null;
-  }
-}
+function closeTextOverlay(){document.getElementById('text-overlay').classList.remove('show');}
 function confirmText(){
   const txt=document.getElementById('text-input').value;
   if(!txt.trim()){closeTextOverlay();return;}
