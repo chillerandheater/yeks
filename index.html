@@ -9,8 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#eee;display:flex;flex-direction:column;font-size:12px}
-body.is-mobile{padding-top:40px;padding-bottom:56px}
-body.is-mobile #main{padding-bottom:0}
 
 /* ── 데스크탑 툴바 ── */
 #toolbar{background:#242424;border-bottom:1px solid #111;flex-shrink:0}
@@ -68,19 +66,17 @@ body.is-mobile #main{padding-bottom:0}
 #no-sel{font-size:10px;color:#555;line-height:1.8}
 
 /* ── 모바일 상단 바 ── */
-#m-topbar{display:none;position:fixed;top:0;left:0;right:0;align-items:center;gap:5px;padding:0 8px;background:#242424;border-bottom:1px solid #111;overflow-x:auto;scrollbar-width:none;height:40px;z-index:1000}
+#m-topbar{display:none;align-items:center;gap:5px;padding:0 8px;background:#242424;border-bottom:1px solid #111;flex-shrink:0;overflow-x:auto;scrollbar-width:none;height:40px}
 #m-topbar::-webkit-scrollbar{display:none}
 #m-topbar .tb{height:26px;font-size:10px;padding:0 7px}
 
 /* ── 모바일 하단 탭바 ── */
 #m-tabbar{
   display:none;
-  position:fixed;
-  bottom:0;left:0;right:0;
+  flex-shrink:0;
   height:56px;
   background:#1a1a1a;
-  border-top:1px solid #333;
-  z-index:1000;
+  border-top:1px solid #111;
 }
 .m-tab{
   flex:1;display:flex;flex-direction:column;
@@ -122,10 +118,9 @@ body.is-mobile #main{padding-bottom:0}
 
 /* ── 모바일 PDF 버튼 ── */
 #m-export-btn{
-  display:none;position:fixed;top:44px;right:8px;z-index:1001;
+  display:none;position:absolute;top:6px;right:6px;z-index:10;
   background:#1a7a1a;color:#fff;border:none;border-radius:14px;
-  padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;
 }
 </style>
 </head>
@@ -324,55 +319,40 @@ const ssvg=document.getElementById('ssvg');
 
 // ── 레이아웃 초기화 (핵심 함수) ──
 function initLayout(){
-  const w=window.innerWidth;
-  // 680px 이하: 모바일 전용 UI
-  // 681~1100px: 모바일 UI + 오른쪽 패널
-  // 1100px 초과: 데스크탑 풀 UI
-  isMobile = w <= 1100;
+  isMobile=('ontouchstart' in window)||window.innerWidth<900;
 
-  const toolbar = document.getElementById('toolbar');
-  const panelLeft = document.getElementById('panel-left');
-  const panelRight = document.getElementById('panel-right');
-  const mTopbar = document.getElementById('m-topbar');
-  const mTabbar = document.getElementById('m-tabbar');
-  const mExport = document.getElementById('m-export-btn');
-  const ca = document.getElementById('canvas-area');
-
-  if(w > 1100){
-    // 데스크탑
-    document.body.classList.remove('is-mobile');
-    toolbar.style.display='block';
-    panelLeft.style.display='block';
-    panelRight.style.display='block';
-    mTopbar.style.display='none';
-    mTabbar.style.display='none';
-    mExport.style.display='none';
-    ca.style.padding='14px';
-    ca.style.overflow='auto';
+  if(isMobile){
+    // 모바일: 데스크탑 요소 숨김
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('panel-left').style.display='none';
+    document.getElementById('panel-right').style.display='none';
+    // 모바일 요소 표시
+    document.getElementById('m-topbar').style.display='flex';
+    document.getElementById('m-tabbar').style.display='flex';
+    document.getElementById('m-export-btn').style.display='block';
+    document.getElementById('canvas-area').style.padding='4px';
+    document.getElementById('canvas-area').style.justifyContent='flex-start';
+    document.getElementById('canvas-area').style.overflow='hidden';
   } else {
-    // 모바일/태블릿
-    document.body.classList.add('is-mobile');
-    toolbar.style.display='none';
-    panelLeft.style.display='none';
-    mTopbar.style.display='flex';
-    mTabbar.style.display='flex';
-    mExport.style.display='block';
-    ca.style.padding='4px';
-    ca.style.overflow='hidden';
-    panelRight.style.display = w > 680 ? 'block' : 'none';
+    document.getElementById('toolbar').style.display='block';
+    document.getElementById('panel-left').style.display='block';
+    document.getElementById('panel-right').style.display='block';
+    document.getElementById('m-topbar').style.display='none';
+    document.getElementById('m-tabbar').style.display='none';
+    document.getElementById('m-export-btn').style.display='none';
   }
   updateDS();
 }
 
 function updateDS(){
-  const area=document.getElementById('canvas-area');
-  const r=area.getBoundingClientRect();
   if(isMobile){
     const topH=40,tabH=56,pad=10;
-    const availW=Math.max(r.width-pad,100);
-    const availH=Math.max(window.innerHeight-topH-tabH-pad,100);
+    const availW=window.innerWidth-pad;
+    const availH=window.innerHeight-topH-tabH-pad;
     DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.6);
   } else {
+    const area=document.getElementById('canvas-area');
+    const r=area.getBoundingClientRect();
     const availW=Math.max(r.width-28,100);
     const availH=Math.max(r.height-50,100);
     DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.45);
