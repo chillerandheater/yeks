@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>북 PDF 에디터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#4a4a4a;color:#eee;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -18,6 +21,14 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
 #exportBtn:disabled{background:#555;cursor:not-allowed}
 #status{font-size:10px;color:#999}
 #main{display:flex;flex:1;overflow:hidden}
+@media (max-width:700px){
+  #panel-left{width:60px}
+  #panel-left h4{font-size:7px}
+  .sthumb-l,.sthumb-r{width:22px!important;height:30px!important}
+  .sthumb-l canvas,.sthumb-r canvas{width:22px!important;height:30px!important}
+  #panel-right{width:0;overflow:hidden;padding:0;border:none}
+  #panel-right *{display:none!important}
+}
 #panel-left{width:120px;background:#282828;border-right:1px solid #111;overflow-y:auto;padding:6px 4px;flex-shrink:0}
 #panel-left h4{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;padding:0 2px}
 .sthumb{display:flex;flex-direction:column;margin-bottom:5px;cursor:pointer;border:1.5px solid #3a3a3a;border-radius:3px;overflow:hidden}
@@ -61,15 +72,52 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
   <div class="sep"></div>
   <label>폰트</label>
   <select id="sfont" onchange="applyTextStyle()">
-    <option value="serif">명조</option>
-    <option value="sans-serif">고딕</option>
-    <option value="monospace">모노</option>
-    <option value="Georgia">Georgia</option>
+    <optgroup label="── 시스템 (오프라인 가능) ──">
+      <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">맑은고딕 / 애플고딕</option>
+      <option value="'Batang','AppleMyungjo',serif">바탕 / 애플명조</option>
+      <option value="'Gulim','Apple SD Gothic Neo',sans-serif">굴림</option>
+      <option value="'Dotum','Apple SD Gothic Neo',sans-serif">돋움</option>
+      <option value="Georgia,serif">Georgia</option>
+      <option value="'Times New Roman',serif">Times New Roman</option>
+      <option value="Arial,sans-serif">Arial</option>
+      <option value="'Courier New',monospace">Courier New</option>
+    </optgroup>
+    <optgroup label="── 한국어 웹폰트 (온라인) ──">
+      <option value="'Nanum Gothic',sans-serif">나눔고딕</option>
+      <option value="'Nanum Myeongjo',serif">나눔명조</option>
+      <option value="'Noto Sans KR',sans-serif">Noto Sans KR</option>
+      <option value="'Noto Serif KR',serif">Noto Serif KR</option>
+      <option value="'Black Han Sans',sans-serif">블랙한산스 (제목용)</option>
+      <option value="'Nanum Pen Script',cursive">나눔펜 (손글씨)</option>
+      <option value="'Gaegu',cursive">개구체 (손글씨)</option>
+      <option value="'Sunflower',sans-serif">해바라기</option>
+    </optgroup>
+    <optgroup label="── 영문 웹폰트 (온라인) ──">
+      <option value="'Playfair Display',serif">Playfair Display</option>
+      <option value="'Montserrat',sans-serif">Montserrat</option>
+      <option value="'Lato',sans-serif">Lato</option>
+      <option value="'Raleway',sans-serif">Raleway</option>
+      <option value="'Oswald',sans-serif">Oswald</option>
+      <option value="'Dancing Script',cursive">Dancing Script (손글씨)</option>
+    </optgroup>
   </select>
   <label>크기</label>
   <input type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTextStyle()" style="width:50px">
   <label>색</label>
   <input type="color" id="scolor" value="#000000" onchange="applyTextStyle()">
+  <label>굵기</label>
+  <select id="sweight" onchange="applyTextStyle()" style="width:90px">
+    <option value="300">Light 300</option>
+    <option value="400" selected>Regular 400</option>
+    <option value="500">Medium 500</option>
+    <option value="700">Bold 700</option>
+    <option value="800">ExtraBold 800</option>
+  </select>
+  <label>스타일</label>
+  <select id="sstyle" onchange="applyTextStyle()" style="width:70px">
+    <option value="normal" selected>보통</option>
+    <option value="italic">이탤릭</option>
+  </select>
   <div class="sep"></div>
   <button class="tb on" id="btn-bleed" onclick="tog('bleed')">블리드</button>
   <button class="tb on" id="btn-art" onclick="tog('art')">아트보드</button>
@@ -99,8 +147,12 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
         <div><label>Y (mm)</label><input type="number" id="py" step="0.1" oninput="fromPanel()"></div>
       </div>
       <div class="pr2" id="sizerow">
-        <div><label>W (mm)</label><input type="number" id="pw" step="0.1" min="1" oninput="fromPanel()"></div>
-        <div><label>H (mm)</label><input type="number" id="ph2" step="0.1" min="1" oninput="fromPanel()"></div>
+        <div><label>W (mm)</label><input type="number" id="pw" step="0.1" min="1" oninput="fromPanelW()"></div>
+        <div><label>H (mm)</label><input type="number" id="ph2" step="0.1" min="1" oninput="fromPanelH()"></div>
+      </div>
+      <div style="margin-bottom:7px;display:flex;align-items:center;gap:5px" id="ratio-row">
+        <button id="btn-ratio" onclick="toggleRatio()" style="flex:1;border:1px solid #3a3a3a;border-radius:3px;padding:4px;font-size:10px;cursor:pointer;background:#1a56db;color:#fff">🔒 비율 유지</button>
+        <span id="ratio-val" style="font-size:9px;color:#666"></span>
       </div>
       <div class="pr" id="txtrow"><label>텍스트</label><textarea id="ptxt" oninput="fromPanel()"></textarea></div>
       <div class="pr" id="fsrow"><label>폰트 크기</label><input type="number" id="pfs" step="0.5" min="1" oninput="fromPanel()"></div>
@@ -174,35 +226,51 @@ input[type=color]{width:26px;height:24px;padding:1px;border:1px solid #555;borde
 
 <script>
 // ── 레이아웃 상수 (mm) ──
-// 왼쪽 페이지: x=0..144 (블리드2 + 페이지140 + 블리드2)
-// 오른쪽 페이지: x=144..288
-// 스프레드 전체: 288 x 204mm
+// 올바른 스프레드 구조:
+//  x=0    x=2       x=142  x=142  x=282   x=284
+//  |블리드2|←왼아트140→|spine |←오른아트140→|블리드2|
+//  왼 블리드박스: x=0..144  (겹침: x=140..144)
+//  오른 블리드박스: x=140..284 (겹침: x=140..144)
+//  스프레드 캔버스 총 너비: 284mm
 const BL=2, PW=140, PH=200;
-const SPINE=BL+PW+BL;   // 144mm
-const SW=SPINE*2;        // 288mm
-const SH=BL+PH+BL;      // 204mm
-// 트림(아트보드) 영역
-const LT={x:BL,       y:BL, w:PW, h:PH};
-const RT={x:SPINE+BL, y:BL, w:PW, h:PH};
+const SPINE=BL+PW;          // 142mm = 왼 아트보드 우측 끝 = 오른 아트보드 좌측 시작
+const SW=BL+PW+PW+BL;      // 284mm = 스프레드 전체
+const SH=BL+PH+BL;          // 204mm
+// 트림(아트보드) 영역 - 아트보드끼리 spine에서 맞닿음
+const LT={x:BL,      y:BL, w:PW, h:PH};   // 왼 트림: x=2..142
+const RT={x:SPINE,   y:BL, w:PW, h:PH};   // 오른 트림: x=142..282
+// 블리드 박스 (각 페이지 PDF 크기 기준)
+const LB={x:0,       y:0, w:BL+PW+BL, h:SH};  // 왼 블리드: x=0..144
+const RB={x:SPINE-BL,y:0, w:BL+PW+BL, h:SH};  // 오른 블리드: x=140..284
 
-const MM=3.7795275591;  // px per mm at 96dpi
-const RS=3;             // 렌더 스케일
-const DS=0.22;          // 표시 스케일
+const MM=3.7795275591;
+const RS=3;
+const NS=16;
 const CW=Math.round(SW*MM*RS);
 const CH=Math.round(SH*MM*RS);
-const DW=Math.round(CW*DS);
-const DH=Math.round(CH*DS);
-const NS=16; // 스프레드 수
 
-function p(v){return v*MM*RS}           // mm→캔버스px
-function m(v){return v/(MM*RS)}         // 캔버스px→mm
-function s2c(v){return v/DS}            // 화면px→캔버스px
-function d(v){return(v*MM*RS*DS).toFixed(2)} // mm→화면px 문자열
+function calcDS(){
+  const area=document.getElementById('canvas-area');
+  const areaW=area?area.getBoundingClientRect().width:window.innerWidth;
+  const availW=Math.max(areaW-32, 100);
+  const availH=Math.max(window.innerHeight-80, 100);
+  const ds=Math.min(availW/CW, availH/CH);
+  return Math.min(Math.max(ds,0.05),0.45);
+}
+let DS=0.22;
+let DW=Math.round(CW*DS);
+let DH=Math.round(CH*DS);
+
+function p(v){return v*MM*RS}
+function m(v){return v/(MM*RS)}
+function s2c(v){return v/DS}
+function d(v){return(v*MM*RS*DS).toFixed(2)}
 
 // ── 상태 ──
 let spreads=Array.from({length:NS},()=>({els:[]}));
 let cur=0, tool='select', sel=null;
 let dragging=false, resizing=false, dox=0, doy=0;
+let lockRatio=true; // 기본: 비율 유지
 let showBleed=true, showArt=true, snapOn=true;
 const SNAP=2;
 
@@ -210,13 +278,21 @@ const SNAP=2;
 const cv=document.getElementById('c');
 const ctx=cv.getContext('2d');
 cv.width=CW; cv.height=CH;
-cv.style.width=DW+'px'; cv.style.height=DH+'px';
 const gsvg=document.getElementById('gsvg');
 const ssvg=document.getElementById('ssvg');
-[gsvg,ssvg].forEach(el=>{
-  el.setAttribute('width',DW); el.setAttribute('height',DH);
-  el.style.width=DW+'px'; el.style.height=DH+'px';
-});
+
+function resizeCanvas(){
+  DS=calcDS();
+  DW=Math.round(CW*DS);
+  DH=Math.round(CH*DS);
+  cv.style.width=DW+'px'; cv.style.height=DH+'px';
+  [gsvg,ssvg].forEach(function(el){
+    el.setAttribute('width',DW); el.setAttribute('height',DH);
+    el.style.width=DW+'px'; el.style.height=DH+'px';
+  });
+}
+window.addEventListener('DOMContentLoaded',function(){resizeCanvas();render();});
+window.addEventListener('resize',function(){resizeCanvas();render();});
 
 // ── 페이지 라벨 ──
 function pgl(si){return si===0?[32,1]:[si*2,si*2+1]}
@@ -225,9 +301,10 @@ function pgl(si){return si===0?[32,1]:[si*2,si*2+1]}
 function render(){
   ctx.clearRect(0,0,CW,CH);
   ctx.fillStyle='#555'; ctx.fillRect(0,0,CW,CH);
-  // 블리드 영역 (연한 회색)
-  ctx.fillStyle='#e8e8e8'; ctx.fillRect(0,0,p(SPINE),CH);
-  ctx.fillStyle='#e8e8e8'; ctx.fillRect(p(SPINE),0,p(SPINE),CH);
+  // 왼쪽 블리드 영역 (연한 회색): x=0..144
+  ctx.fillStyle='#e0ddd8'; ctx.fillRect(0,0,p(LB.w),CH);
+  // 오른쪽 블리드 영역: x=140..284
+  ctx.fillStyle='#e0ddd8'; ctx.fillRect(p(RB.x),0,p(RB.w),CH);
   // 트림(아트보드) 흰색
   ctx.fillStyle='#fff'; ctx.fillRect(p(LT.x),p(LT.y),p(LT.w),p(LT.h));
   ctx.fillStyle='#fff'; ctx.fillRect(p(RT.x),p(RT.y),p(RT.w),p(RT.h));
@@ -239,7 +316,9 @@ function render(){
 function getBoundsInMM(el){
   if(el.type==='img') return{x:el.x,y:el.y,w:el.w,h:el.h};
   const fs=p(el.fs);
-  ctx.save(); ctx.font=`${fs}px ${el.ff}`; ctx.textBaseline='top';
+  const fw=el.fw||'400';
+  const fst=el.fst||'normal';
+  ctx.save(); ctx.font=`${fst} ${fw} ${fs}px ${el.ff}`; ctx.textBaseline='top';
   const lines=el.txt.split('\n');
   const tw=m(lines.reduce((a,b)=>Math.max(a,ctx.measureText(b).width),0));
   const th=el.fs*1.35*lines.length;
@@ -260,7 +339,9 @@ function drawEl(c,el,isSel){
     }
   } else {
     const fs=p(el.fs);
-    c.font=`${fs}px ${el.ff}`;
+    const fw=el.fw||'400';
+    const fst=el.fst||'normal';
+    c.font=`${fst} ${fw} ${fs}px ${el.ff}`;
     c.fillStyle=el.col; c.textBaseline='top';
     el.txt.split('\n').forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*fs*1.35));
     if(isSel){
@@ -277,21 +358,40 @@ function drawEl(c,el,isSel){
 function drawGuides(){
   let s='';
   if(showBleed){
-    s+=`<rect x="0" y="0" width="${d(SPINE)}" height="${d(SH)}" fill="none" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`;
-    s+=`<rect x="${d(SPINE)}" y="0" width="${d(SPINE)}" height="${d(SH)}" fill="none" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`;
+    // 왼 블리드박스 외곽선: 좌/상/하만 (우측=spine안쪽은 점선)
+    s+=`<line x1="0" y1="0" x2="0" y2="${d(SH)}" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 왼외곽
+    s+=`<line x1="0" y1="0" x2="${d(LB.w)}" y2="0" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 상단
+    s+=`<line x1="0" y1="${d(SH)}" x2="${d(LB.w)}" y2="${d(SH)}" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 하단
+    s+=`<line x1="${d(LB.w)}" y1="0" x2="${d(LB.w)}" y2="${d(SH)}" stroke="rgba(255,60,60,.55)" stroke-width="0.6" stroke-dasharray="3,2"/>`; // 왼블리드 우측(점선)
+    // 오른 블리드박스
+    s+=`<line x1="${d(SW)}" y1="0" x2="${d(SW)}" y2="${d(SH)}" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 오른외곽
+    s+=`<line x1="${d(RB.x)}" y1="0" x2="${d(SW)}" y2="0" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 상단
+    s+=`<line x1="${d(RB.x)}" y1="${d(SH)}" x2="${d(SW)}" y2="${d(SH)}" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`; // 하단
+    s+=`<line x1="${d(RB.x)}" y1="0" x2="${d(RB.x)}" y2="${d(SH)}" stroke="rgba(255,60,60,.55)" stroke-width="0.6" stroke-dasharray="3,2"/>`; // 오른블리드 좌측(점선)
     s+=`<text x="2" y="9" font-size="7" fill="rgba(255,80,80,.9)" font-family="sans-serif">블리드</text>`;
   }
   if(showArt){
-    s+=`<rect x="${d(LT.x)}" y="${d(LT.y)}" width="${d(LT.w)}" height="${d(LT.h)}" fill="none" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`;
-    s+=`<rect x="${d(RT.x)}" y="${d(RT.y)}" width="${d(RT.w)}" height="${d(RT.h)}" fill="none" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`;
-    s+=`<line x1="${d(SPINE)}" y1="0" x2="${d(SPINE)}" y2="${d(SH)}" stroke="rgba(255,210,50,.7)" stroke-width="0.7" stroke-dasharray="4,3"/>`;
+    // 아트보드: 왼=2..142, 오=142..282
+    // 왼 아트보드 - 좌/상/하만 (우측은 spine이므로 생략, spine선으로 대체)
+    s+=`<line x1="${d(LT.x)}" y1="${d(LT.y)}" x2="${d(LT.x)}" y2="${d(LT.y+LT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 왼
+    s+=`<line x1="${d(LT.x)}" y1="${d(LT.y)}" x2="${d(SPINE)}" y2="${d(LT.y)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 상
+    s+=`<line x1="${d(LT.x)}" y1="${d(LT.y+LT.h)}" x2="${d(SPINE)}" y2="${d(LT.y+LT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 하
+    // 오른 아트보드 - 우/상/하만
+    s+=`<line x1="${d(RT.x+RT.w)}" y1="${d(RT.y)}" x2="${d(RT.x+RT.w)}" y2="${d(RT.y+RT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 우
+    s+=`<line x1="${d(SPINE)}" y1="${d(RT.y)}" x2="${d(RT.x+RT.w)}" y2="${d(RT.y)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 상
+    s+=`<line x1="${d(SPINE)}" y1="${d(RT.y+RT.h)}" x2="${d(RT.x+RT.w)}" y2="${d(RT.y+RT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`; // 하
+    // spine 선 하나만 (아트보드 경계, 노란 점선)
+    s+=`<line x1="${d(SPINE)}" y1="0" x2="${d(SPINE)}" y2="${d(SH)}" stroke="rgba(255,210,50,.85)" stroke-width="0.9" stroke-dasharray="5,3"/>`;
     const[lp,rp]=pgl(cur);
     s+=`<text x="${d(LT.x+1)}" y="${d(LT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${lp}</text>`;
     s+=`<text x="${d(RT.x+1)}" y="${d(RT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${rp}</text>`;
   }
   if(showBleed&&showArt){
-    [[LT.x,LT.y],[LT.x+LT.w,LT.y],[LT.x,LT.y+LT.h],[LT.x+LT.w,LT.y+LT.h],
-     [RT.x,RT.y],[RT.x+RT.w,RT.y],[RT.x,RT.y+RT.h],[RT.x+RT.w,RT.y+RT.h]].forEach(([mx,my])=>{
+    // 트림마크: 각 아트보드 코너
+    // spine(x=SPINE)은 LT 우측=RT 좌측이므로 중복 제거
+    [[LT.x,LT.y],[LT.x,LT.y+LT.h],        // 왼 아트보드 좌측 상하
+     [RT.x+RT.w,RT.y],[RT.x+RT.w,RT.y+RT.h], // 오른 아트보드 우측 상하
+     [SPINE,LT.y],[SPINE,LT.y+LT.h]].forEach(([mx,my])=>{  // spine 상하 (공유)
       const px=parseFloat(d(mx)),py=parseFloat(d(my)),sz=5;
       s+=`<line x1="${px-sz}" y1="${py}" x2="${px+sz}" y2="${py}" stroke="rgba(255,60,60,.6)" stroke-width="0.5"/>`;
       s+=`<line x1="${px}" y1="${py-sz}" x2="${px}" y2="${py+sz}" stroke="rgba(255,60,60,.6)" stroke-width="0.5"/>`;
@@ -353,7 +453,7 @@ document.getElementById('fi').addEventListener('change',function(){
       if(hmm>PH*0.85){hmm=PH*0.85; wmm=hmm/ratio;}
       const ex=SPINE-wmm/2;
       const ey=(SH-hmm)/2;
-      const el={type:'img',x:ex,y:ey,w:wmm,h:hmm,img:img};
+      const el={type:'img',x:ex,y:ey,w:wmm,h:hmm,img:img,_ratio:wmm/hmm};
       spreads[cur].els.push(el);
       sel=el;
       setTool('select');
@@ -406,7 +506,9 @@ cv.addEventListener('mousedown',function(e){
     const el={type:'txt',x:m(mx),y:m(my),txt:'텍스트 입력',
       ff:document.getElementById('sfont').value,
       fs:parseFloat(document.getElementById('ssize').value)||14,
-      col:document.getElementById('scolor').value};
+      col:document.getElementById('scolor').value,
+      fw:document.getElementById('sweight').value||'400',
+      fst:document.getElementById('sstyle').value||'normal'};
     spreads[cur].els.push(el);
     sel=el; setTool('select'); updatePanel(); render();
   }
@@ -421,8 +523,16 @@ cv.addEventListener('mousemove',function(e){
     showSnap(sn.sx,sn.sy);
     updatePanel(); render();
   } else if(resizing&&sel&&sel.type==='img'){
-    sel.w=Math.max(5,m(mx)-sel.x);
-    sel.h=Math.max(5,m(my)-sel.y);
+    const nw=Math.max(5,m(mx)-sel.x);
+    const nh=Math.max(5,m(my)-sel.y);
+    if(lockRatio&&sel._ratio){
+      // 더 많이 변한 쪽 기준으로 비율 유지
+      const dw=Math.abs(nw-sel.w), dh=Math.abs(nh-sel.h);
+      if(dw>=dh){ sel.w=nw; sel.h=nw/sel._ratio; }
+      else { sel.h=nh; sel.w=nh*sel._ratio; }
+    } else {
+      sel.w=nw; sel.h=nh;
+    }
     updatePanel(); render();
   }
   if(tool==='select'){
@@ -451,6 +561,8 @@ function applyTextStyle(){
   sel.ff=document.getElementById('sfont').value;
   sel.fs=parseFloat(document.getElementById('ssize').value)||14;
   sel.col=document.getElementById('scolor').value;
+  sel.fw=document.getElementById('sweight').value||'400';
+  sel.fst=document.getElementById('sstyle').value||'normal';
   render();
 }
 
@@ -465,15 +577,24 @@ function updatePanel(){
   document.getElementById('sizerow').style.display=isImg?'grid':'none';
   document.getElementById('txtrow').style.display=isImg?'none':'block';
   document.getElementById('fsrow').style.display=isImg?'none':'block';
+  const ratioRow=document.getElementById('ratio-row');
+  if(ratioRow) ratioRow.style.display=isImg?'flex':'none';
   if(isImg){
     document.getElementById('pw').value=sel.w.toFixed(1);
     document.getElementById('ph2').value=sel.h.toFixed(1);
+    if(!sel._ratio) sel._ratio=sel.w/sel.h;
+    const btn=document.getElementById('btn-ratio');
+    btn.textContent=lockRatio?'🔒 비율 유지':'🔓 비율 해제';
+    btn.style.background=lockRatio?'#1a56db':'#555';
+    updateRatioDisplay();
   } else {
     document.getElementById('ptxt').value=sel.txt;
     document.getElementById('pfs').value=sel.fs;
     document.getElementById('sfont').value=sel.ff;
     document.getElementById('ssize').value=sel.fs;
     document.getElementById('scolor').value=sel.col;
+    document.getElementById('sweight').value=sel.fw||'400';
+    document.getElementById('sstyle').value=sel.fst||'normal';
   }
   const rs=document.getElementById('refsel');
   rs.innerHTML='<option value="">— 선택 —</option>';
@@ -495,6 +616,43 @@ function fromPanel(){
     sel.fs=parseFloat(document.getElementById('pfs').value)||14;
   }
   render();
+}
+function fromPanelW(){
+  if(!sel||sel.type!=='img') return;
+  sel.x=parseFloat(document.getElementById('px').value)||0;
+  sel.y=parseFloat(document.getElementById('py').value)||0;
+  const w=parseFloat(document.getElementById('pw').value)||10;
+  sel.w=w;
+  if(lockRatio&&sel._ratio){ sel.h=w/sel._ratio; document.getElementById('ph2').value=sel.h.toFixed(1); }
+  updateRatioDisplay(); render();
+}
+function fromPanelH(){
+  if(!sel||sel.type!=='img') return;
+  sel.x=parseFloat(document.getElementById('px').value)||0;
+  sel.y=parseFloat(document.getElementById('py').value)||0;
+  const h=parseFloat(document.getElementById('ph2').value)||10;
+  sel.h=h;
+  if(lockRatio&&sel._ratio){ sel.w=h*sel._ratio; document.getElementById('pw').value=sel.w.toFixed(1); }
+  updateRatioDisplay(); render();
+}
+function toggleRatio(){
+  lockRatio=!lockRatio;
+  const btn=document.getElementById('btn-ratio');
+  btn.textContent=lockRatio?'🔒 비율 유지':'🔓 비율 해제';
+  btn.style.background=lockRatio?'#1a56db':'#555';
+  if(lockRatio&&sel&&sel.type==='img'){
+    // 현재 w/h로 비율 재계산
+    sel._ratio=sel.w/sel.h;
+  }
+  updateRatioDisplay();
+}
+function updateRatioDisplay(){
+  const rv=document.getElementById('ratio-val');
+  if(sel&&sel.type==='img'&&sel._ratio){
+    // 간단한 비율 표시 (예: 4:3, 16:9 등)
+    const r=sel._ratio;
+    rv.textContent=`${r.toFixed(2)}:1`;
+  } else { rv.textContent=''; }
 }
 
 // ── 정렬 ──
@@ -570,14 +728,18 @@ function syncThumb(s){
   const thumbs=document.querySelectorAll('.sthumb');
   const th=thumbs[s]; if(!th) return;
   const cvs=th.querySelectorAll('canvas');
-  const half=Math.round(CW/2);
+  // 왼쪽 썸네일: 블리드포함 왼페이지 x=0..144
+  const leftW=Math.round(CW*(LB.w/SW));
+  // 오른쪽 썸네일: 블리드포함 오른페이지 x=140..284
+  const rightX=Math.round(CW*(RB.x/SW));
+  const rightW=Math.round(CW*(RB.w/SW));
   const lc=cvs[0].getContext('2d');
   lc.fillStyle='white';lc.fillRect(0,0,TW*2,TH*2);
-  lc.drawImage(cv,0,0,half,CH,0,0,TW*2,TH*2);
+  lc.drawImage(cv,0,0,leftW,CH,0,0,TW*2,TH*2);
   if(cvs[1]){
     const rc=cvs[1].getContext('2d');
     rc.fillStyle='white';rc.fillRect(0,0,TW*2,TH*2);
-    rc.drawImage(cv,half,0,half,CH,0,0,TW*2,TH*2);
+    rc.drawImage(cv,rightX,0,rightW,CH,0,0,TW*2,TH*2);
   }
 }
 function goTo(s){
@@ -590,156 +752,250 @@ function goTo(s){
   document.querySelectorAll('.sthumb')[s].scrollIntoView({block:'nearest'});
 }
 
-// ── PDF 내보내기 (순수 JS, 외부 라이브러리 없음) ──
+// ── PDF 내보내기 (순수 JS, TrimBox/BleedBox 포함) ──
 function exportPDF(){
   const btn=document.getElementById('exportBtn');
   const st=document.getElementById('status');
   btn.disabled=true; btn.textContent='생성 중...';
 
-  // 각 페이지를 별도 캔버스에 렌더링
-  const PCW=Math.round(SPINE*MM*RS);  // 한 페이지 캔버스 너비 (144mm)
-  const PCH=CH;
-  const pageOff=document.createElement('canvas');
-  const spreadOff=document.createElement('canvas');
-  pageOff.width=PCW; pageOff.height=PCH;
-  spreadOff.width=CW; spreadOff.height=CH;
-  const poc=pageOff.getContext('2d');
-  const soc=spreadOff.getContext('2d');
+  const PT=2.834645; // 1mm = 2.834645pt
+  // 페이지 크기 (pt)
+  const mediaW=parseFloat((SPINE*PT).toFixed(3));   // 144mm = 408.188pt
+  const mediaH=parseFloat((SH*PT).toFixed(3));       // 204mm = 578.467pt
+  const trimX1=parseFloat((BL*PT).toFixed(3));       // 2mm
+  const trimY1=parseFloat((BL*PT).toFixed(3));       // 2mm
+  const trimX2=parseFloat(((SPINE-BL)*PT).toFixed(3)); // 142mm
+  const trimY2=parseFloat(((SH-BL)*PT).toFixed(3));    // 202mm
 
-  // 스프레드 렌더 (가이드 없이)
+  // 각 스프레드를 오프스크린 캔버스에 렌더 후 좌/우 페이지로 크롭
+  // 각 페이지 PDF 크기: 144×204mm (블리드 포함)
+  const PAGE_MM_W=BL+PW+BL;   // 144mm
+  const PCW=Math.round(PAGE_MM_W*MM*RS);
+  const spreadOff=document.createElement('canvas');
+  spreadOff.width=CW; spreadOff.height=CH;
+  const soc=spreadOff.getContext('2d');
+  const pageOff=document.createElement('canvas');
+  pageOff.width=PCW; pageOff.height=CH;
+  const poc=pageOff.getContext('2d');
+
   function renderSpreadClean(si){
     soc.clearRect(0,0,CW,CH);
     soc.fillStyle='white'; soc.fillRect(0,0,CW,CH);
     spreads[si].els.forEach(function(el){drawEl(soc,el,false);});
   }
 
-  // 페이지 JPEG dataURL 추출
-  function getPageDataURL(si, side){
+  function getPageJpeg(si,side){
     renderSpreadClean(si);
-    poc.clearRect(0,0,PCW,PCH);
-    poc.fillStyle='white'; poc.fillRect(0,0,PCW,PCH);
-    const srcX = side==='left' ? 0 : Math.round(CW/2);
-    poc.drawImage(spreadOff, srcX,0,PCW,PCH, 0,0,PCW,PCH);
-    return pageOff.toDataURL('image/jpeg', 0.92);
-  }
-
-  // PDF 생성 (직접 구현)
-  // 144mm x 204mm = 408.19pt x 578.41pt (1mm = 2.834645pt)
-  const PT=2.834645;
-  const pageWidthPt=(SPINE*PT).toFixed(2);
-  const pageHeightPt=(SH*PT).toFixed(2);
-
-  const pages=[];
-  for(let si=0;si<NS;si++){
-    pages.push({si,side:'left'});
-    pages.push({si,side:'right'});
-  }
-
-  // 각 페이지 이미지 수집
-  const pageImages=[];
-  for(let i=0;i<pages.length;i++){
-    const pg=pages[i];
-    pageImages.push(getPageDataURL(pg.si,pg.side));
-    btn.textContent=`처리중 ${i+1}/${pages.length}`;
-  }
-
-  // PDF 바이너리 빌드
-  let pdf='%PDF-1.4\n';
-  const offsets=[];
-  let objNum=1;
-
-  function addObj(content){
-    offsets.push(pdf.length);
-    pdf+=`${objNum} 0 obj\n${content}\nendobj\n`;
-    return objNum++;
-  }
-
-  // 카탈로그, 페이지 트리는 나중에
-  const catalogRef=objNum++;
-  const pagesRef=objNum++;
-
-  const pageRefs=[];
-  const imgObjs=[];
-
-  for(let i=0;i<pageImages.length;i++){
-    // JPEG dataURL → base64
-    const dataUrl=pageImages[i];
+    poc.clearRect(0,0,PCW,CH);
+    poc.fillStyle='white'; poc.fillRect(0,0,PCW,CH);
+    // 왼페이지: x=0..144(LB.w), 오른페이지: x=140..284(RB.x..RB.x+RB.w)
+    const srcX=side==='left'?0:Math.round(CW*(RB.x/SW));
+    const srcW=Math.round(CW*(PAGE_MM_W/SW));
+    poc.drawImage(spreadOff,srcX,0,srcW,CH,0,0,PCW,CH);
+    const dataUrl=pageOff.toDataURL('image/jpeg',0.92);
     const b64=dataUrl.split(',')[1];
-    const raw=atob(b64);
-    const bytes=new Uint8Array(raw.length);
-    for(let j=0;j<raw.length;j++) bytes[j]=raw.charCodeAt(j);
+    // base64 → binary string
+    const bin=atob(b64);
+    const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    return bytes;
+  }
 
-    // XObject 이미지
-    offsets.push(pdf.length);
-    const imgRef=objNum;
-    pdf+=`${objNum} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${PCH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`;
-    // 바이너리는 별도 배열로 추적
-    imgObjs.push({ref:imgRef,bytes,pdfOffset:pdf.length});
-    // 실제 바이너리는 나중에 합칠 때 삽입
-    pdf+='BINARY_PLACEHOLDER_'+i+'\nendstream\nendobj\n';
-    objNum++;
+  // 모든 페이지 JPEG 수집
+  const pageJpegs=[];
+  const N_PAGES=NS*2;
+  // PDF 페이지 순서: p1, p2, p3 ... p31, p32
+  // spread0 = [p32, p1] → right(p1) 먼저, 나머지 spreads 정상 순서, 마지막에 left(p32)
+  // spread1 = [p2, p3], spread2 = [p4, p5] ... spread15 = [p30, p31]
+  // 최종 순서: p1(s0-right), p2(s1-left), p3(s1-right), ... p30(s15-left), p31(s15-right), p32(s0-left)
+  pageJpegs.push(getPageJpeg(0,'right')); // p1
+  for(let si=1;si<NS;si++){
+    pageJpegs.push(getPageJpeg(si,'left'));
+    pageJpegs.push(getPageJpeg(si,'right'));
+    btn.textContent=`처리중 ${si*2+1}/${N_PAGES}`;
+  }
+  pageJpegs.push(getPageJpeg(0,'left')); // p32 (마지막)
 
-    // 페이지 콘텐츠 스트림
-    const stream=`q ${pageWidthPt} 0 0 ${pageHeightPt} 0 0 cm /Im${i} Do Q`;
-    offsets.push(pdf.length);
-    const contentRef=objNum;
-    pdf+=`${objNum} 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}\nendstream\nendobj\n`;
-    objNum++;
+  // ── PDF 바이너리 직접 생성 ──
+  // PDF는 바이너리 파일이므로 Uint8Array 배열로 조각을 모아 마지막에 합침
+  const chunks=[]; // Uint8Array 또는 string 조각들
+  let pos=0;       // 현재 바이트 오프셋
 
-    // 페이지
-    offsets.push(pdf.length);
-    const pageRef=objNum;
-    pdf+=`${objNum} 0 obj\n<< /Type /Page /Parent ${pagesRef} 0 R /MediaBox [0 0 ${pageWidthPt} ${pageHeightPt}] /Contents ${contentRef} 0 R /Resources << /XObject << /Im${i} ${imgRef} 0 R >> >> >>\nendobj\n`;
+  function enc(str){
+    const b=new TextEncoder().encode(str);
+    chunks.push(b); pos+=b.length; return b.length;
+  }
+  function encBin(bytes){
+    chunks.push(bytes); pos+=bytes.length; return bytes.length;
+  }
+
+  const xrefOffsets=[]; // 각 객체 오프셋
+  let objCount=0;
+
+  function startObj(){
+    xrefOffsets.push(pos);
+    enc(`${++objCount} 0 obj\n`);
+    return objCount;
+  }
+  function endObj(){ enc('endobj\n'); }
+
+  // PDF 헤더 (바이너리 마커 포함)
+  enc('%PDF-1.4\n');
+  enc('%\xFF\xFF\xFF\xFF\n'); // 바이너리 파일임을 알리는 마커
+
+  // 각 페이지 리소스 객체 번호 미리 할당
+  // 구조: 이미지XObj(i), 콘텐츠스트림(i), 페이지(i) × N_PAGES + Pages + Catalog
+  // 총 객체 = N_PAGES*3 + 2
+  // objCount를 미리 증가시키지 않고 순서대로 생성
+
+  const imgRefs=[];
+  const contentRefs=[];
+  const pageRefs=[];
+
+  for(let i=0;i<N_PAGES;i++){
+    const jpeg=pageJpegs[i];
+
+    // 이미지 XObject
+    xrefOffsets.push(pos);
+    const imgRef=++objCount;
+    imgRefs.push(imgRef);
+    enc(`${imgRef} 0 obj\n`);
+    enc(`<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${CH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\n`);
+    enc('stream\n');
+    encBin(jpeg);
+    enc('\nendstream\nendobj\n');
+
+    // 콘텐츠 스트림: 이미지를 페이지 전체에 배치
+    const stream=`q ${mediaW} 0 0 ${mediaH} 0 0 cm /Im${i} Do Q`;
+    xrefOffsets.push(pos);
+    const contentRef=++objCount;
+    contentRefs.push(contentRef);
+    enc(`${contentRef} 0 obj\n`);
+    enc(`<< /Length ${stream.length} >>\n`);
+    enc('stream\n');
+    enc(stream);
+    enc('\nendstream\nendobj\n');
+
+    // 페이지 객체 (TrimBox, BleedBox 포함)
+    xrefOffsets.push(pos);
+    const pageRef=++objCount;
     pageRefs.push(pageRef);
-    objNum++;
+    enc(`${pageRef} 0 obj\n`);
+    enc('<< /Type /Page\n');
+    enc(`   /Parent ${objCount+N_PAGES*3-i*3-2} 0 R\n`); // Pages 객체 참조 (나중에 fix)
+    enc(`   /MediaBox [0 0 ${mediaW} ${mediaH}]\n`);
+    enc(`   /BleedBox [0 0 ${mediaW} ${mediaH}]\n`);
+    enc(`   /TrimBox [${trimX1} ${trimY1} ${trimX2} ${trimY2}]\n`);
+    enc(`   /Contents ${contentRef} 0 R\n`);
+    enc(`   /Resources << /XObject << /Im${i} ${imgRef} 0 R >> >>\n`);
+    enc('>>\nendobj\n');
+  }
+
+  // Pages 객체 - 위에서 Parent 참조를 미리 계산하기 어려우므로 다시 정확하게 작성
+  // 위 페이지 객체의 Parent 참조가 틀렸으므로 올바른 방식으로 재작성
+  // → 간단히: 두 패스로 나누기. 1패스에서 Pages ref 번호만 확보 후 2패스에서 페이지 생성
+  // 여기서는 이미 생성했으므로 Pages objNum을 직접 계산
+  const pagesObjNum=objCount+1;
+
+  // 위에서 생성한 페이지들의 Parent를 수정할 수 없으므로
+  // 다시 처음부터 올바르게 만들어야 함. chunks를 버리고 재시작.
+
+  // ── 2패스 방식으로 완전히 재작성 ──
+  // 먼저 객체 번호 계획:
+  // 1..N_PAGES: 이미지 XObject
+  // N_PAGES+1..N_PAGES*2: 콘텐츠 스트림
+  // N_PAGES*2+1..N_PAGES*3: 페이지
+  // N_PAGES*3+1: Pages
+  // N_PAGES*3+2: Catalog
+  const NP=N_PAGES;
+  const IMG_BASE=1;
+  const CONT_BASE=NP+1;
+  const PAGE_BASE=NP*2+1;
+  const PAGES_OBJ=NP*3+1;
+  const CATALOG_OBJ=NP*3+2;
+  const TOTAL_OBJS=NP*3+2;
+
+  // 청크 초기화
+  chunks.length=0; pos=0;
+  const xref=new Array(TOTAL_OBJS+1).fill(0);
+
+  enc('%PDF-1.4\n%\xFF\xFF\xFF\xFF\n');
+
+  // 이미지 XObject들
+  for(let i=0;i<NP;i++){
+    const jpeg=pageJpegs[i];
+    xref[IMG_BASE+i]=pos;
+    enc(`${IMG_BASE+i} 0 obj\n`);
+    enc(`<< /Type /XObject /Subtype /Image /Width ${PCW} /Height ${CH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+    encBin(jpeg);
+    enc('\nendstream\nendobj\n');
+  }
+
+  // 콘텐츠 스트림들
+  for(let i=0;i<NP;i++){
+    const stream=`q ${mediaW} 0 0 ${mediaH} 0 0 cm /Im${IMG_BASE+i} Do Q`;
+    xref[CONT_BASE+i]=pos;
+    enc(`${CONT_BASE+i} 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}\nendstream\nendobj\n`);
+  }
+
+  // 페이지들
+  for(let i=0;i<NP;i++){
+    xref[PAGE_BASE+i]=pos;
+    enc(`${PAGE_BASE+i} 0 obj\n`);
+    enc(`<< /Type /Page /Parent ${PAGES_OBJ} 0 R\n`);
+    enc(`   /MediaBox [0 0 ${mediaW} ${mediaH}]\n`);
+    enc(`   /BleedBox [0 0 ${mediaW} ${mediaH}]\n`);
+    enc(`   /TrimBox [${trimX1} ${trimY1} ${trimX2} ${trimY2}]\n`);
+    enc(`   /Contents ${CONT_BASE+i} 0 R\n`);
+    enc(`   /Resources << /XObject << /Im${IMG_BASE+i} ${IMG_BASE+i} 0 R >> >>\n`);
+    enc('>>\nendobj\n');
   }
 
   // Pages
-  offsets.push(pdf.length);
-  const kidsStr=pageRefs.map(r=>`${r} 0 R`).join(' ');
-  pdf+=`${pagesRef} 0 obj\n<< /Type /Pages /Kids [${kidsStr}] /Count ${pageRefs.length} >>\nendobj\n`;
+  xref[PAGES_OBJ]=pos;
+  const kids=Array.from({length:NP},(_,i)=>`${PAGE_BASE+i} 0 R`).join(' ');
+  enc(`${PAGES_OBJ} 0 obj\n<< /Type /Pages /Kids [${kids}] /Count ${NP} >>\nendobj\n`);
 
   // Catalog
-  offsets.push(pdf.length);
-  pdf+=`${catalogRef} 0 obj\n<< /Type /Catalog /Pages ${pagesRef} 0 R >>\nendobj\n`;
+  xref[CATALOG_OBJ]=pos;
+  enc(`${CATALOG_OBJ} 0 obj\n<< /Type /Catalog /Pages ${PAGES_OBJ} 0 R >>\nendobj\n`);
 
-  // xref + trailer (오프셋 기반으로 계산 — 바이너리 플레이스홀더 방식이므로 간단 구현)
-  // 바이너리 데이터가 있어 순수 텍스트 PDF가 안 됨
-  // → canvas.toBlob + JSZip 없이 JPEG를 base64 인코딩 스트림으로 삽입
-  // 대신 각 페이지를 개별 이미지로 다운로드하는 방식으로 fallback
-  // → 가장 확실한 방법: 각 페이지를 PNG blob으로 만들어 zip없이 개별 다운로드 or
-  //    multipage를 지원하는 순수JS PDF 라이브러리 인라인 포함
-
-  // ── 현실적 해결: 각 페이지를 JPEG로 다운로드 (PDF 불가 시 fallback) ──
-  // 대신 간단하고 확실한 PDF: 각 페이지를 data URI로 <img>에 넣고 print dialog 활용
-  btn.disabled=false; btn.textContent='⬇ PDF 내보내기';
-
-  // 새 창에서 인쇄 다이얼로그 열기
-  const win=window.open('','_blank');
-  if(!win){alert('팝업이 차단됐습니다. 팝업을 허용해주세요.'); st.textContent='오류'; return;}
-
-  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>북 PDF</title><style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:#fff;}
-    .page{width:144mm;height:204mm;page-break-after:always;overflow:hidden;position:relative;}
-    .page:last-child{page-break-after:auto;}
-    .page img{width:144mm;height:204mm;display:block;}
-    @media print{@page{size:144mm 204mm;margin:0;}.page{page-break-after:always;}}
-  </style></head><body>`;
-
-  for(let i=0;i<pageImages.length;i++){
-    html+=`<div class="page"><img src="${pageImages[i]}"></div>`;
+  // xref 테이블
+  const xrefPos=pos;
+  enc(`xref\n0 ${TOTAL_OBJS+1}\n`);
+  enc('0000000000 65535 f \n');
+  for(let i=1;i<=TOTAL_OBJS;i++){
+    enc(xref[i].toString().padStart(10,'0')+' 00000 n \n');
   }
-  html+=`<script>window.onload=function(){window.print();}<\/script></body></html>`;
-  win.document.write(html);
-  win.document.close();
 
-  st.textContent=`p${pgl(cur).join('·')}`;
+  // trailer
+  enc(`trailer\n<< /Size ${TOTAL_OBJS+1} /Root ${CATALOG_OBJ} 0 R >>\n`);
+  enc(`startxref\n${xrefPos}\n%%EOF\n`);
+
+  // 전체 Uint8Array로 합치기
+  const totalSize=chunks.reduce(function(a,c){return a+(c instanceof Uint8Array?c.length:0);},0);
+  const out=new Uint8Array(pos);
+  let offset2=0;
+  chunks.forEach(function(c){
+    if(c instanceof Uint8Array){out.set(c,offset2);offset2+=c.length;}
+  });
+
+  // Blob으로 다운로드
+  const blob=new Blob([out],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='book_bleed2mm.pdf';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+
+  btn.disabled=false; btn.textContent='⬇ PDF 내보내기';
+  const[lp,rp]=pgl(cur); st.textContent=`p${lp}·${rp}`;
   render();
   document.querySelectorAll('.sthumb').forEach(function(t,i){t.classList.toggle('on',i===cur);});
 }
-
 buildThumbs();
+resizeCanvas();
 render();
 </script>
 </body>
