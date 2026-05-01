@@ -182,6 +182,19 @@ select optgroup{background:#f5f5f2}
     <div class="sep"></div>
     <span id="d-status" style="font-size:10px;color:#999">p32·1</span>
     <div style="flex:1"></div>
+    <button class="tb" onclick="saveJSON()" title="프로젝트 저장">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+      저장
+    </button>
+    <button class="tb" onclick="document.getElementById('fi-json').click()" title="프로젝트 불러오기">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      불러오기
+    </button>
+    <button class="tb" onclick="clearAllConfirm()" style="color:#d05555" title="전체 초기화">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      초기화
+    </button>
+    <div class="sep"></div>
     <button id="d-exportBtn" onclick="exportPDF()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> PDF 내보내기</button>
   </div>
   <div id="tb2">
@@ -233,8 +246,19 @@ select optgroup{background:#f5f5f2}
   <button class="tb on" id="m-btn-snap" onclick="tog('snap')">스냅</button>
   <span id="m-status" style="font-size:10px;color:#999;margin-left:6px;white-space:nowrap">p32·1</span>
   <button id="m-export-btn" onclick="exportPDF()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> PDF</button>
+  <div style="width:1px;height:16px;background:#e0ddd8;margin:0 2px;flex-shrink:0"></div>
+  <button class="tb" onclick="saveJSON()" title="저장" style="height:28px;padding:0 10px;flex-shrink:0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+  </button>
+  <button class="tb" onclick="document.getElementById('fi-json').click()" title="불러오기" style="height:28px;padding:0 10px;flex-shrink:0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </button>
+  <button class="tb" onclick="clearAllConfirm()" title="초기화" style="height:28px;padding:0 10px;flex-shrink:0;color:#d05555">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </button>
 </div>
 
+<input type="file" id="fi-json" accept=".json" style="display:none">
 <input type="file" id="fi-m" accept="image/*" style="display:none">
 
 <!-- 메인 -->
@@ -512,7 +536,7 @@ function setupImg(id){
         let w=PW*.85,h=w*r;
         if(h>PH*.85){h=PH*.85;w=h/r;}
         const el={type:'img',x:SPINE-w/2,y:(SH-h)/2,w,h,img,_ratio:w/h};
-        spreads[cur].els.push(el);sel=el;setTool('select');updatePanel();render();
+        spreads[cur].els.push(el);sel=el;setTool('select');updatePanel();render();autoSave();
       };
       img.onerror=()=>alert('이미지 로드 실패');
       img.src=ev.target.result;
@@ -562,7 +586,7 @@ function ptrMove(cx,cy){
     updatePanel();render();
   }
 }
-function ptrUp(){dragging=false;resizing=false;ssvg.innerHTML='';}
+function ptrUp(){if(dragging||resizing)autoSave();dragging=false;resizing=false;ssvg.innerHTML='';}
 
 // ── 마우스 ──
 cv.addEventListener('mousedown',e=>ptrDown(e.clientX,e.clientY));
@@ -634,7 +658,7 @@ function confirmTxt(){
       fst:document.getElementById('sstyle').value||'normal'};
     spreads[cur].els.push(el);sel=el;
   }
-  setTool('select');closeTxtOverlay();updatePanel();render();
+  setTool('select');closeTxtOverlay();updatePanel();render();autoSave();
 }
 
 // ── 도구 ──
@@ -825,11 +849,11 @@ function alnRef(type){
   else if(type==='AL')sel.x=rb.x-sb.w;else if(type==='AT')sel.y=rb.y-sb.h;
   updatePanel();render();
 }
-function delEl(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>-1)e.splice(i,1);sel=null;updatePanel();render();}
+function delEl(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>-1)e.splice(i,1);sel=null;updatePanel();render();autoSave();}
 function lyrUp(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i<e.length-1){[e[i],e[i+1]]=[e[i+1],e[i]];render();}}
 function lyrDn(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>0){[e[i],e[i-1]]=[e[i-1],e[i]];render();}}
-function clrSpread(){const[a,b]=pgl(cur);if(!confirm(`스프레드 ${a}·${b} 초기화?`))return;spreads[cur].els=[];sel=null;updatePanel();render();}
-function cpyAll(){if(!confirm('전체 복사?'))return;const src=spreads[cur].els;spreads.forEach((s,i)=>{if(i!==cur)s.els=src.map(el=>({...el}));});render();}
+function clrSpread(){const[a,b]=pgl(cur);if(!confirm(`스프레드 ${a}·${b} 초기화?`))return;spreads[cur].els=[];sel=null;updatePanel();render();autoSave();}
+function cpyAll(){if(!confirm('전체 복사?'))return;const src=spreads[cur].els;spreads.forEach((s,i)=>{if(i!==cur)s.els=src.map(el=>({...el}));});render();autoSave();}
 
 // ── 썸네일 ──
 const TW=40,TH=28;
@@ -908,10 +932,159 @@ function exportPDF(){
   render();document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===cur));
 }
 
+
+// ── IndexedDB 자동저장 ──
+const DB_NAME='BookEditorDB', DB_VER=1, STORE='spreads';
+let db=null;
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,DB_VER);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE,{keyPath:'id'});
+    };
+    req.onsuccess=e=>{db=e.target.result;resolve(db);};
+    req.onerror=e=>reject(e);
+  });
+}
+
+// 이미지 img 객체를 base64로 직렬화
+function serializeEl(el){
+  if(el.type==='img'){
+    // img 객체 → base64 dataURL
+    const off=document.createElement('canvas');
+    off.width=el.img.naturalWidth||el.img.width;
+    off.height=el.img.naturalHeight||el.img.height;
+    const oc=off.getContext('2d');
+    oc.drawImage(el.img,0,0);
+    const dataUrl=off.toDataURL('image/jpeg',0.85);
+    return{...el,img:undefined,_dataUrl:dataUrl};
+  }
+  return{...el};
+}
+
+// base64 → img 객체로 역직렬화
+function deserializeEl(el){
+  return new Promise(resolve=>{
+    if(el.type==='img'&&el._dataUrl){
+      const img=new Image();
+      img.onload=()=>resolve({...el,img,_dataUrl:undefined});
+      img.onerror=()=>resolve(null);
+      img.src=el._dataUrl;
+    } else resolve(el);
+  });
+}
+
+// 자동저장 (디바운스 500ms)
+let saveTimer=null;
+function autoSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>saveToIDB(),500);
+}
+
+async function saveToIDB(){
+  if(!db) return;
+  const tx=db.transaction(STORE,'readwrite');
+  const st=tx.objectStore(STORE);
+  // 기존 데이터 삭제 후 저장
+  st.clear();
+  for(let i=0;i<NS;i++){
+    const els=spreads[i].els.map(serializeEl);
+    st.put({id:i,els});
+  }
+  // 현재 스프레드 인덱스도 저장
+  st.put({id:'meta',cur});
+  return new Promise(resolve=>tx.oncomplete=resolve);
+}
+
+async function loadFromIDB(){
+  if(!db) return false;
+  return new Promise(resolve=>{
+    const tx=db.transaction(STORE,'readonly');
+    const st=tx.objectStore(STORE);
+    const req=st.getAll();
+    req.onsuccess=async e=>{
+      const rows=e.target.result;
+      if(!rows||rows.length===0){resolve(false);return;}
+      let hasMeta=false;
+      for(const row of rows){
+        if(row.id==='meta'){cur=row.cur||0;hasMeta=true;continue;}
+        if(typeof row.id==='number'&&row.id<NS){
+          const els=await Promise.all(row.els.map(deserializeEl));
+          spreads[row.id].els=els.filter(Boolean);
+        }
+      }
+      resolve(hasMeta||rows.length>1);
+    };
+    req.onerror=()=>resolve(false);
+  });
+}
+
+function clearAllConfirm(){
+  if(!confirm('모든 작업 내용을 삭제하고 초기화할까요?\n이 작업은 되돌릴 수 없습니다.')) return;
+  spreads=Array.from({length:NS},()=>({els:[]}));
+  sel=null;cur=0;
+  if(db){
+    const tx=db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).clear();
+  }
+  goTo(0);updatePanel();render();
+}
+
+// ── JSON 내보내기/불러오기 ──
+function saveJSON(){
+  const data={version:1,spreads:spreads.map(s=>({els:s.els.map(serializeEl)}))};
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='book_project.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function loadJSONFile(){
+  document.getElementById('fi-json').addEventListener('change',async function(){
+    const file=this.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=async ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.spreads){alert('올바른 프로젝트 파일이 아닙니다.');return;}
+        if(!confirm('현재 작업을 덮어쓰고 불러올까요?'))return;
+        spreads=Array.from({length:NS},()=>({els:[]}));
+        for(let i=0;i<Math.min(data.spreads.length,NS);i++){
+          const els=await Promise.all(data.spreads[i].els.map(deserializeEl));
+          spreads[i].els=els.filter(Boolean);
+        }
+        sel=null;cur=0;
+        await saveToIDB();
+        goTo(0);updatePanel();render();
+        alert('불러오기 완료!');
+      }catch(e){alert('파일 읽기 실패: '+e.message);}
+    };
+    reader.readAsText(file);
+    this.value='';
+  },{once:false});
+}
+
 // ── 초기화 ──
 buildThumbs();
 initLayout();
-render();
+loadJSONFile();
+// IndexedDB 열고 저장된 데이터 복원
+openDB().then(async()=>{
+  const restored=await loadFromIDB();
+  if(restored){
+    const[lp,rp]=pgl(cur);
+    document.getElementById('spread-label').textContent=`스프레드 ${lp} · ${rp}`;
+    document.getElementById('d-status').textContent=`p${lp}·${rp}`;
+    document.getElementById('m-status').textContent=`p${lp}·${rp}`;
+    document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===cur));
+    updatePanel();
+  }
+  render();
+}).catch(()=>render());
 </script>
 </body>
 </html>
