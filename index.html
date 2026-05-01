@@ -666,10 +666,54 @@ function mSheet(type){
   document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('on'));
   document.getElementById('mt-'+type)?.classList.add('on');
   if(type==='pages'){
-    let h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
-    for(let s=0;s<NS;s++){const[lp,rp]=pgl(s);h+=`<div onclick="goTo(${s});closeSheet()" style="background:#f8f7f5;border:1.5px solid ${s===cur?'#1a56db':'#222'};border-radius:6px;padding:8px;text-align:center;cursor:pointer"><div style="font-size:10px;color:#999;margin-bottom:4px">p${lp}·${rp}</div><div style="width:100%;height:36px;background:#fff;border-radius:3px"></div></div>`;}
-    body.innerHTML=h+'</div>';
-  } else if(type==='props'){
+    let h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="m-pages-grid">';
+    for(let s=0;s<NS;s++){
+      const[lp,rp]=pgl(s);
+      h+=`<div onclick="goTo(${s});closeSheet()" style="border:2px solid ${s===cur?'#1a56db':'#ddd8d0'};border-radius:8px;overflow:hidden;cursor:pointer;background:#fff">
+        <div style="display:flex;height:52px;background:#f0ede8">
+          <canvas id="mpc-l-${s}" style="flex:1;display:block"></canvas>
+          <div style="width:1px;background:#ddd8d0;flex-shrink:0"></div>
+          <canvas id="mpc-r-${s}" style="flex:1;display:block"></canvas>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:2px 6px;font-size:8px;color:#aaa;background:#f8f7f5">
+          <span>${lp}</span><span>${rp}</span>
+        </div>
+      </div>`;
+    }
+    h+='</div>';
+    body.innerHTML=h;
+    // 오프스크린에 각 스프레드 렌더해서 썸네일 채우기
+    requestAnimationFrame(()=>{
+      const offSp=document.createElement('canvas');
+      offSp.width=CW;offSp.height=CH;
+      const osc=offSp.getContext('2d');
+      const TH=52;
+      for(let s=0;s<NS;s++){
+        osc.clearRect(0,0,CW,CH);
+        osc.fillStyle='#dedad4';osc.fillRect(0,0,CW,CH);
+        osc.fillStyle='#f5f2ee';osc.fillRect(0,0,p(LB.w),CH);
+        osc.fillStyle='#f5f2ee';osc.fillRect(p(RB.x),0,p(RB.w),CH);
+        osc.fillStyle='#fff';osc.fillRect(p(LT.x),p(LT.y),p(LT.w),p(LT.h));
+        osc.fillStyle='#fff';osc.fillRect(p(RT.x),p(RT.y),p(RT.w),p(RT.h));
+        spreads[s].els.forEach(el=>drawEl(osc,el,false));
+        const lSrcW=Math.round(CW*(LB.w/SW));
+        const rSrcX=Math.round(CW*(RB.x/SW));
+        const rSrcW=Math.round(CW*(RB.w/SW));
+        ['l','r'].forEach(side=>{
+          const tc=document.getElementById('mpc-'+side+'-'+s);
+          if(!tc)return;
+          const pr=tc.parentElement;
+          const tw=Math.floor(pr.offsetWidth/2-1)||60;
+          tc.width=tw*2;tc.height=TH*2;
+          tc.style.width=tw+'px';tc.style.height=TH+'px';
+          const tcx=tc.getContext('2d');
+          tcx.fillStyle='#fff';tcx.fillRect(0,0,tw*2,TH*2);
+          if(side==='l') tcx.drawImage(offSp,0,0,lSrcW,CH,0,0,tw*2,TH*2);
+          else tcx.drawImage(offSp,rSrcX,0,rSrcW,CH,0,0,tw*2,TH*2);
+        });
+      }
+    });
+    } else if(type==='props'){
     if(!sel){body.innerHTML='<div style="color:#aaa;padding:8px;font-size:12px">요소를 먼저 선택하세요</div>';document.getElementById('m-sheet').classList.add('open');return;}
     const isImg=sel.type==='img';
     const inp=(id,val,label,extra='')=>`<div><div style="font-size:10px;color:#999;margin-bottom:3px">${label}</div><input type="number" value="${val}" step="0.1" ${extra} style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#1a1a1a;font-size:14px;outline:none"></div>`;
