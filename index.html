@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>북 PDF 에디터</title>
+<title>YEKS ZINE EDITOR by 1px Gardening Inc.</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -381,7 +381,7 @@ const ssvg=document.getElementById('ssvg');
 
 // ── 레이아웃 ──
 function initLayout(){
-  isMobile=window.innerWidth<=1100;
+  isMobile=window.innerWidth<=768;
   const show=(id,v)=>{const el=document.getElementById(id);if(el)el.style.display=v;};
   if(isMobile){
     show('d-toolbar','none');
@@ -398,14 +398,17 @@ function initLayout(){
     show('m-tabbar','none');
     document.getElementById('canvas-area').style.padding='12px';
   }
-  calcDS();
+  // 레이아웃 반영 후 크기 계산
+  requestAnimationFrame(()=>{ calcDS(); render(); });
 }
 
 function calcDS(){
   const area=document.getElementById('canvas-area');
   const r=area.getBoundingClientRect();
-  const availW=Math.max(r.width-16,80);
-  const availH=Math.max(r.height-30,80);
+  const toolbarH=isMobile?44:66;
+  const tabbarH=isMobile?56:0;
+  const availW=Math.max(r.width>0?r.width-16:window.innerWidth-16, 80);
+  const availH=Math.max(r.height>0?r.height-30:window.innerHeight-toolbarH-tabbarH-30, 80);
   DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.55);
   DW=Math.round(CW*DS);DH=Math.round(CH*DS);
   cv.style.width=DW+'px';cv.style.height=DH+'px';
