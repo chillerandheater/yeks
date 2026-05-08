@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>YEKS ZINE EDITOR by 1px Gardening Inc.</title>
+<title>YEKS ZINE EDITOR by INOUT</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -11,15 +11,15 @@ html{height:100%}
 body{
   height:100%;display:flex;flex-direction:column;
   font-family:'Segoe UI',system-ui,sans-serif;
-  background:#f0f0ed;color:#1a1a1a;font-size:12px;
+  background:#f0f0ed;color:#1a1a1a;font-size:13px;
   overflow:hidden;
 }
 
 /* ── 공통 버튼 ── */
 .tb{border:1px solid #d0ccc6;border-radius:3px;padding:0 8px;font-size:11px;cursor:pointer;background:#f5f5f2;color:#aaa;height:22px;white-space:nowrap;line-height:20px}
 .tb:active{opacity:.7}.tb.on{background:#1a56db;color:#fff;border-color:#1a56db}
-.ts{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:11px;background:#f5f5f2;color:#1a1a1a;outline:none;height:22px}
-.tn{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:11px;background:#f5f5f2;color:#1a1a1a;outline:none;height:22px;width:48px}
+.ts{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:12px;background:#f5f5f2;color:#1a1a1a;outline:none;height:24px}
+.tn{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:12px;background:#f5f5f2;color:#1a1a1a;outline:none;height:24px;width:52px}
 .tc{width:24px;height:22px;padding:1px;border:1px solid #d0ccc6;border-radius:3px;cursor:pointer}
 .sep{width:1px;height:16px;background:#333;margin:0 2px;flex-shrink:0}
 .tl{font-size:10px;color:#999;white-space:nowrap}
@@ -71,7 +71,7 @@ body{
 .sthumb-l,.sthumb-r{flex:1;background:#fff;overflow:hidden}
 .sthumb-l canvas,.sthumb-r canvas{display:block;width:100%;height:100%}
 .sthumb-spine{width:2px;background:#444;flex-shrink:0}
-.sthumb-nums{display:flex;justify-content:space-between;padding:1px 4px;font-size:7px;color:#999;background:#f8f7f5}
+.sthumb-nums{display:flex;justify-content:space-between;padding:1px 4px;font-size:8px;color:#999;background:#f8f7f5}
 
 /* ── 캔버스 영역 ── */
 #canvas-area{
@@ -93,19 +93,19 @@ body{
   flex-shrink:0;display:none;
   scrollbar-width:thin;scrollbar-color:#bbb transparent;
 }
-.ph{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin:9px 0 5px}
+.ph{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin:9px 0 5px}
 .ph:first-child{margin-top:0}
 .pr{margin-bottom:7px}
 .pr label{font-size:10px;color:#999;display:block;margin-bottom:2px}
-.pr input,.pr select,.pr textarea{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:3px 6px;font-size:11px;background:#f8f7f5;color:#1a1a1a;outline:none}
+.pr input,.pr select,.pr textarea{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:3px 6px;font-size:12px;background:#f8f7f5;color:#1a1a1a;outline:none}
 .pr textarea{resize:vertical;min-height:44px;font-family:inherit}
 .pr2{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:7px}
 .pr2 label{font-size:10px;color:#999;display:block;margin-bottom:2px}
-.pr2 input{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:3px 5px;font-size:11px;background:#f8f7f5;color:#1a1a1a;outline:none}
+.pr2 input{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:3px 5px;font-size:12px;background:#f8f7f5;color:#1a1a1a;outline:none}
 .ag{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:3px}
 .ab{border:1px solid #d8d4ce;border-radius:3px;padding:3px 0;font-size:13px;cursor:pointer;background:#f8f7f5;color:#888;text-align:center}
 .ab:hover{background:#f0ede8;color:#fff}
-.ac{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:5px;font-size:10px;cursor:pointer;background:#f8f7f5;color:#888;margin-bottom:3px;text-align:center}
+.ac{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:6px;font-size:11px;cursor:pointer;background:#f8f7f5;color:#888;margin-bottom:3px;text-align:center}
 .ac:hover{background:#f0ede8}
 .ac.red{color:#d05555;border-color:#5a2020}
 .hr{height:1px;background:#f5f5f2;margin:7px 0}
@@ -490,8 +490,13 @@ function drawGuides(){
     s+=`<line x1="${dp(RT.x+RT.w)}" y1="${dp(RT.y)}" x2="${dp(RT.x+RT.w)}" y2="${dp(RT.y+RT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`;
     s+=`<line x1="${dp(SPINE)}" y1="0" x2="${dp(SPINE)}" y2="${dp(SH)}" stroke="rgba(255,210,50,.9)" stroke-width="1" stroke-dasharray="5,3"/>`;
     const[lp,rp]=pgl(cur);
-    s+=`<text x="${dp(LT.x+1)}" y="${dp(LT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${lp}</text>`;
-    s+=`<text x="${dp(RT.x+1)}" y="${dp(RT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${rp}</text>`;
+    // Back/Front Cover는 더 크고 강조
+    const iscover=(typeof lp==='string');
+    const lblSize=iscover?'8':'7';
+    const lblColor=iscover?'rgba(30,100,220,1)':'rgba(80,160,255,.85)';
+    const lblWeight=iscover?'bold':'normal';
+    s+=`<text x="${dp(LT.x+1)}" y="${dp(LT.y+5)}" font-size="${lblSize}" font-weight="${lblWeight}" fill="${lblColor}" font-family="sans-serif">${lp}</text>`;
+    s+=`<text x="${dp(RT.x+1)}" y="${dp(RT.y+5)}" font-size="${lblSize}" font-weight="${lblWeight}" fill="${lblColor}" font-family="sans-serif">${rp}</text>`;
   }
   if(showBleed&&showArt){
     [[LT.x,LT.y],[RT.x+RT.w,LT.y],[LT.x,LT.y+LT.h],[RT.x+RT.w,LT.y+LT.h],[SPINE,LT.y],[SPINE,LT.y+LT.h]].forEach(([mx,my])=>{
@@ -805,7 +810,7 @@ function mSheet(type){
           <input type="color" value="${sel.col}" oninput="sel.col=this.value;render()" style="width:100%;height:44px;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:2px;cursor:pointer"></div>
       </div>`;
     }
-    const bs='background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:9px;font-size:12px;cursor:pointer;text-align:center';
+    const bs='background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:9px;font-size:13px;cursor:pointer;text-align:center';
     h+=`<div style="font-size:10px;color:#999;margin-bottom:6px">Quick align</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:4px">
       <button style="${bs};color:#999" onclick="aln('L','L')">L⇤</button>
@@ -925,9 +930,13 @@ function syncThumb(s){
 }
 function goTo(s){
   cur=s;sel=null;const[lp,rp]=pgl(s);
-  document.getElementById('spread-label').textContent=`Spread ${lp} · ${rp}`;
-  document.getElementById('d-status').textContent=`p${lp}·${rp}`;
-  document.getElementById('m-status').textContent=`p${lp}·${rp}`;
+  const isC=(typeof lp==='string');
+  document.getElementById('spread-label').textContent=isC?`${lp}  ·  ${rp}`:`Spread ${lp} · ${rp}`;
+  document.getElementById('spread-label').style.fontWeight=isC?'700':'400';
+  document.getElementById('spread-label').style.color=isC?'#1a56db':'';
+  document.getElementById('spread-label').style.fontSize=isC?'13px':'11px';
+  document.getElementById('d-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
+  document.getElementById('m-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
   document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===s));
   updatePanel();render();document.querySelectorAll('.sthumb')[s]?.scrollIntoView({block:'nearest'});
 }
@@ -1120,9 +1129,13 @@ openDB().then(async()=>{
   const restored=await loadFromIDB();
   if(restored){
     const[lp,rp]=pgl(cur);
-    document.getElementById('spread-label').textContent=`Spread ${lp} · ${rp}`;
-    document.getElementById('d-status').textContent=`p${lp}·${rp}`;
-    document.getElementById('m-status').textContent=`p${lp}·${rp}`;
+    const isC=(typeof lp==='string');
+  document.getElementById('spread-label').textContent=isC?`${lp}  ·  ${rp}`:`Spread ${lp} · ${rp}`;
+  document.getElementById('spread-label').style.fontWeight=isC?'700':'400';
+  document.getElementById('spread-label').style.color=isC?'#1a56db':'';
+  document.getElementById('spread-label').style.fontSize=isC?'13px':'11px';
+    document.getElementById('d-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
+    document.getElementById('m-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
     document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===cur));
     updatePanel();
   }
