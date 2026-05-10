@@ -162,7 +162,7 @@ body{
 #text-confirm{background:#1a56db;color:#fff}
 #text-spacer{flex-shrink:0;height:0;background:#f5f5f2;transition:height .1s}
 
-/* ── Font 선택 옵션 ── */
+/* ── Font Select 옵션 ── */
 select optgroup{background:#f5f5f2}
 </style>
 </head>
@@ -171,14 +171,14 @@ select optgroup{background:#f5f5f2}
 <!-- 데스크탑 툴바 -->
 <div id="d-toolbar">
   <div id="tb1">
-    <button class="tb on" id="btn-select" onclick="setTool('select')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg> 선택</button>
-    <button class="tb" id="btn-text" onclick="setTool('text')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><text x="1" y="11" font-size="11" font-weight="700" font-family="serif" fill="currentColor">T</text></svg> Text</button>
-    <button class="tb" id="btn-image" onclick="document.getElementById('fi').click()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="4" cy="4.5" r="1" fill="currentColor"/><path d="M1 8.5l3-3 2.5 2.5 2-2 3.5 3.5H1z" fill="currentColor"/></svg> 이미지</button>
+    <button class="tb on" id="btn-select" style="height:36px" onclick="setTool('select')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg> Select</button>
+    <button class="tb" id="btn-text" style="height:36px" onclick="setTool('text')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><text x="1" y="11" font-size="11" font-weight="700" font-family="serif" fill="currentColor">T</text></svg> Text</button>
+    <button class="tb" id="btn-image" style="height:36px" onclick="document.getElementById('fi').click()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="4" cy="4.5" r="1" fill="currentColor"/><path d="M1 8.5l3-3 2.5 2.5 2-2 3.5 3.5H1z" fill="currentColor"/></svg> Image</button>
     <input type="file" id="fi" accept="image/*" style="display:none">
     <div class="sep"></div>
-    <button class="tb on" id="btn-bleed" onclick="tog('bleed')">Bleed</button>
-    <button class="tb on" id="btn-art" onclick="tog('art')">Artboard</button>
-    <button class="tb on" id="btn-snap" onclick="tog('snap')">Snap</button>
+    <button class="tb on" id="btn-bleed" style="height:36px" onclick="tog('bleed')">Bleed</button>
+    <button class="tb on" id="btn-art" style="height:36px" onclick="tog('art')">Artboard</button>
+    <button class="tb on" id="btn-snap" style="height:36px" onclick="tog('snap')">Snap</button>
     <div class="sep"></div>
     <span id="d-status" style="font-size:10px;color:#999">p32·1</span>
     <div style="flex:1"></div>
@@ -201,7 +201,7 @@ select optgroup{background:#f5f5f2}
     <label class="tl">Font</label>
     <select class="ts" id="sfont" style="min-width:110px" onchange="applyTxtStyle()" style="width:110px">
       <optgroup label="시스템">
-        <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">맑은고딕</option>
+        <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">Malgun Gothic</option>
         <option value="'Batang','AppleMyungjo',serif">바탕</option>
         <option value="Georgia,serif">Georgia</option>
         <option value="Arial,sans-serif">Arial</option>
@@ -279,7 +279,7 @@ select optgroup{background:#f5f5f2}
     </div>
   </div>
   <div id="panel-right">
-    <div id="no-sel">Click an element to select.<br><br>🖼 Image는 양쪽 배치 가능<br>T Text는 더블클릭 편집</div>
+    <div id="no-sel">Click an element to select.<br><br>🖼 Image는 양쪽 배치 가능<br>T Text: double-click to edit</div>
     <div id="sel-wrap" style="display:none">
       <div class="ph">Position / Size</div>
       <div class="pr2">
@@ -316,7 +316,7 @@ select optgroup{background:#f5f5f2}
     </div>
     <div class="hr"></div>
     <div class="ph" style="margin-top:0">Spread</div>
-    <button class="ac" onclick="clrSpread()">이 Spread Reset</button>
+    <button class="ac" onclick="clrSpread()">Clear Spread</button>
     <button class="ac" onclick="cpyAll()">Copy to all</button>
   </div>
 </div>
@@ -551,7 +551,7 @@ function showSnap(sx,sy){
   ssvg.innerHTML=s;
 }
 
-// ── 이미지 업로드 ──
+// ── Image 업로드 ──
 function setupImg(id){
   document.getElementById(id).addEventListener('change',function(){
     const file=this.files[0];if(!file)return;
@@ -785,7 +785,7 @@ function mSheet(type){
       <button onclick="toggleRatio();mSheet('props')" style="width:100%;background:${lockRatio?'#1a56db':'#333'};color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;margin-bottom:12px">${lockRatio?'● Lock ratio':'○ Unlock ratio'}</button>`;
     } else {
       const fontOpts=[
-        ["'Malgun Gothic','Apple SD Gothic Neo',sans-serif","맑은고딕"],
+        ["'Malgun Gothic','Apple SD Gothic Neo',sans-serif","Malgun Gothic"],
         ["'Batang','AppleMyungjo',serif","바탕"],
         ["Georgia,serif","Georgia"],
         ["Arial,sans-serif","Arial"],
@@ -891,8 +891,8 @@ function updatePanel(){
     document.getElementById('sbgon').checked=sel.bgon||false;
   }
   const rs=document.getElementById('refsel');
-  rs.innerHTML='<option value="">— 선택 —</option>';
-  spreads[cur].els.forEach((el,i)=>{if(el===sel)return;rs.innerHTML+=`<option value="${i}">${el.type==='txt'?`"${el.txt.slice(0,10)}"`:` 이미지${i+1}`}</option>`;});
+  rs.innerHTML='<option value="">— Select —</option>';
+  spreads[cur].els.forEach((el,i)=>{if(el===sel)return;rs.innerHTML+=`<option value="${i}">${el.type==='txt'?`"${el.txt.slice(0,10)}"`:` Image${i+1}`}</option>`;});
 }
 function fromPanel(){if(!sel)return;sel.x=parseFloat(document.getElementById('px').value)||0;sel.y=parseFloat(document.getElementById('py').value)||0;if(sel.type==='img'){sel.w=parseFloat(document.getElementById('pw').value)||10;sel.h=parseFloat(document.getElementById('ph2').value)||10;}else{sel.txt=document.getElementById('ptxt').value;sel.fs=parseFloat(document.getElementById('pfs').value)||14;}render();}
 function fromPanelW(){if(!sel||sel.type!=='img')return;const w=parseFloat(document.getElementById('pw').value)||10;sel.w=w;if(lockRatio&&sel._ratio){sel.h=w/sel._ratio;document.getElementById('ph2').value=sel.h.toFixed(1);}render();}
@@ -1025,7 +1025,7 @@ function openDB(){
   });
 }
 
-// 이미지 img 객체를 base64로 직렬화
+// Image img 객체를 base64로 직렬화
 function serializeEl(el){
   if(el.type==='img'){
     // img 객체 → base64 dataURL
