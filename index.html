@@ -16,12 +16,12 @@ body{
 }
 
 /* ── 공통 버튼 ── */
-.tb{border:1px solid #d0ccc6;border-radius:3px;padding:0 8px;font-size:15px;cursor:pointer;background:#f5f5f2;color:#aaa;height:22px;white-space:nowrap;line-height:36px}
+.tb{border:1px solid #d0ccc6;border-radius:3px;padding:0 8px;font-size:15px;cursor:pointer;background:#f5f5f2;color:#aaa;height:22px;white-space:nowrap;line-height:34px}
 .tb:active{opacity:.7}.tb.on{background:#1a56db;color:#fff;border-color:#1a56db}
-.ts{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#1a1a1a;outline:none;height:34px}
-.tn{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#1a1a1a;outline:none;height:24px;width:52px}
-.tc{width:32px;height:34px;padding:1px;border:1px solid #d0ccc6;border-radius:3px;cursor:pointer}
-.sep{width:1px;height:22px;background:#e8e4de;margin:0 2px;flex-shrink:0}
+.ts{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#1a1a1a;outline:none;height:36px}
+.tn{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#1a1a1a;outline:none;height:36px;width:52px}
+.tc{width:36px;height:36px;padding:1px;border:1px solid #d0ccc6;border-radius:3px;cursor:pointer}
+.sep{width:1px;height:24px;background:#e8e4de;margin:0 2px;flex-shrink:0}
 .tl{font-size:14px;color:#999;white-space:nowrap}
 
 /* ── 데스크탑 툴바 (모바일에서 숨김) ── */
@@ -30,10 +30,10 @@ body{
   border-bottom:1px solid #e0ddd8;
   display:none; /* JS로 데스크탑에서만 표시 */
 }
-#tb1,#tb2{display:flex;align-items:center;gap:4px;padding:8px 12px;overflow-x:auto;min-height:44px;scrollbar-width:none}
+#tb1,#tb2{display:flex;align-items:center;gap:6px;padding:6px 10px;overflow-x:auto;min-height:48px;scrollbar-width:none}
 #tb1::-webkit-scrollbar,#tb2::-webkit-scrollbar{display:none}
 #tb1{border-bottom:1px solid #e0ddd8}
-#d-exportBtn{background:#1a7a1a;color:#fff;border:none;border-radius:3px;padding:0 16px;font-size:15px;font-weight:600;cursor:pointer;height:36px}
+#d-exportBtn{background:#1a7a1a;color:#fff;border:none;border-radius:3px;padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;height:36px}
 
 /* ── 모바일 상단바 ── */
 #m-topbar{
@@ -199,7 +199,7 @@ select optgroup{background:#f5f5f2}
   </div>
   <div id="tb2">
     <label class="tl">Font</label>
-    <select class="ts" id="sfont" onchange="applyTxtStyle()" style="width:110px">
+    <select class="ts" id="sfont" style="min-width:110px" onchange="applyTxtStyle()" style="width:110px">
       <optgroup label="시스템">
         <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">맑은고딕</option>
         <option value="'Batang','AppleMyungjo',serif">바탕</option>
@@ -236,6 +236,12 @@ select optgroup{background:#f5f5f2}
     <select class="ts" id="sstyle" onchange="applyTxtStyle()" style="width:62px">
       <option value="normal" selected>Normal</option><option value="italic">Italic</option>
     </select>
+    <div class="sep"></div>
+    <label class="tl">Text BG</label>
+    <input class="tc" type="color" id="sbgcolor" value="#ffffff" onchange="applyTxtStyle()">
+    <label class="tl" style="display:flex;align-items:center;gap:4px;cursor:pointer">
+      <input type="checkbox" id="sbgon" onchange="applyTxtStyle()" style="width:16px;height:16px;cursor:pointer;accent-color:#1a56db">On
+    </label>
   </div>
 </div>
 
@@ -460,8 +466,18 @@ function drawEl(c,el,isSel){
   } else {
     const fs=p(el.fs);
     c.font=`${el.fst||'normal'} ${el.fw||'400'} ${fs}px ${el.ff}`;
-    c.fillStyle=el.col;c.textBaseline='top';
-    el.txt.split('\n').forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*fs*1.35));
+    c.textBaseline='top';
+    const lines=el.txt.split('\n');
+    const lh=fs*1.35;
+    // 배경색 그리기
+    if(el.bgon&&el.bgcol){
+      const maxW=lines.reduce((a,b)=>Math.max(a,c.measureText(b).width),0);
+      const pad=fs*0.2;
+      c.fillStyle=el.bgcol;
+      c.fillRect(p(el.x)-pad, p(el.y)-pad, maxW+pad*2, lh*lines.length+pad*2);
+    }
+    c.fillStyle=el.col;
+    lines.forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*lh));
     if(isSel){
       const b=getBounds(el);
       c.strokeStyle='#4af';c.lineWidth=2;c.setLineDash([6,3]);
@@ -666,7 +682,9 @@ function confirmTxt(){
       fs:parseFloat(document.getElementById('ssize').value)||14,
       col:document.getElementById('scolor').value,
       fw:document.getElementById('sweight').value||'400',
-      fst:document.getElementById('sstyle').value||'normal'};
+      fst:document.getElementById('sstyle').value||'normal',
+      bgcol:document.getElementById('sbgcolor').value,
+      bgon:document.getElementById('sbgon').checked};
     spreads[cur].els.push(el);sel=el;
   }
   setTool('select');closeTxtOverlay();updatePanel();render();autoSave();
@@ -692,6 +710,8 @@ function applyTxtStyle(){
   sel.col=document.getElementById('scolor').value;
   sel.fw=document.getElementById('sweight').value||'400';
   sel.fst=document.getElementById('sstyle').value||'normal';
+  sel.bgcol=document.getElementById('sbgcolor').value;
+  sel.bgon=document.getElementById('sbgon').checked;
   render();
 }
 
@@ -827,8 +847,10 @@ function mSheet(type){
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
       <button onclick="lyrUp()" style="${bs};color:#999">Forward</button>
       <button onclick="lyrDn()" style="${bs};color:#999">Backward</button>
-      <button onclick="delEl();closeSheet()" style="${bs};color:#d05555;border-color:#5a2020">Delete</button>
-    </div>`;
+      <button onclick="delEl();closeSheet()" style="${bs};color:#d05555;border-color:#f5b0a8">Delete</button>
+    </div>
+    <div style="height:1px;background:#e8e4de;margin:14px 0"></div>
+    <button onclick="clearAllConfirm()" style="width:100%;background:#fff0f0;border:1.5px solid #f5b0a8;border-radius:8px;padding:13px;font-size:14px;font-weight:700;color:#d05555;cursor:pointer">🗑 Reset All</button>`;
     body.innerHTML=h;
   }
   document.getElementById('m-sheet').classList.add('open');
@@ -865,6 +887,8 @@ function updatePanel(){
     document.getElementById('scolor').value=sel.col;
     document.getElementById('sweight').value=sel.fw||'400';
     document.getElementById('sstyle').value=sel.fst||'normal';
+    document.getElementById('sbgcolor').value=sel.bgcol||'#ffffff';
+    document.getElementById('sbgon').checked=sel.bgon||false;
   }
   const rs=document.getElementById('refsel');
   rs.innerHTML='<option value="">— 선택 —</option>';
