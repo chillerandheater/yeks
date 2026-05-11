@@ -850,7 +850,20 @@ function mSheet(type){
       <button onclick="delEl();closeSheet()" style="${bs};color:#d05555;border-color:#f5b0a8">Delete</button>
     </div>
     <div style="height:1px;background:#e8e4de;margin:14px 0"></div>
-    <button onclick="clearAllConfirm()" style="width:100%;background:#fff0f0;border:1.5px solid #f5b0a8;border-radius:8px;padding:13px;font-size:14px;font-weight:700;color:#d05555;cursor:pointer">🗑 Reset All</button>`;
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="saveJSON()" style="background:#f5f5f2;border:1px solid #e0ddd8;border-radius:8px;padding:12px;font-size:14px;font-weight:600;color:#444;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+        Save
+      </button>
+      <button onclick="document.getElementById('fi-json').click()" style="background:#f5f5f2;border:1px solid #e0ddd8;border-radius:8px;padding:12px;font-size:14px;font-weight:600;color:#444;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Load
+      </button>
+    </div>
+    <button onclick="clearAllConfirm()" style="width:100%;background:#fff0f0;border:1.5px solid #f5b0a8;border-radius:8px;padding:13px;font-size:14px;font-weight:700;color:#d05555;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+      <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Reset All
+    </button>`;
     body.innerHTML=h;
   }
   document.getElementById('m-sheet').classList.add('open');
