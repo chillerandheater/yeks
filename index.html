@@ -3,50 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>북 PDF 에디터</title>
+<meta name="color-scheme" content="light only">
+<title>YEKS ZINE EDITOR by INOUT</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Sunflower:wght@300;500;700&family=Dancing+Script:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%}
+html{height:100%;color-scheme:light}
 body{
   height:100%;display:flex;flex-direction:column;
   font-family:'Segoe UI',system-ui,sans-serif;
-  background:#3a3a3a;color:#eee;font-size:12px;
+  background:#f0f0ed;color:#f5f5f2;font-size:17px;
   overflow:hidden;
 }
 
 /* ── 공통 버튼 ── */
-.tb{border:1px solid #444;border-radius:3px;padding:0 8px;font-size:11px;cursor:pointer;background:#1a1a1a;color:#bbb;height:22px;white-space:nowrap;line-height:20px}
+.tb{border:1px solid #d0ccc6;border-radius:3px;padding:0 8px;font-size:15px;cursor:pointer;background:#f5f5f2;color:#777;height:22px;white-space:nowrap;line-height:34px}
 .tb:active{opacity:.7}.tb.on{background:#1a56db;color:#fff;border-color:#1a56db}
-.ts{border:1px solid #444;border-radius:3px;padding:2px 4px;font-size:11px;background:#1a1a1a;color:#eee;outline:none;height:22px}
-.tn{border:1px solid #444;border-radius:3px;padding:2px 4px;font-size:11px;background:#1a1a1a;color:#eee;outline:none;height:22px;width:48px}
-.tc{width:24px;height:22px;padding:1px;border:1px solid #444;border-radius:3px;cursor:pointer}
-.sep{width:1px;height:16px;background:#333;margin:0 2px;flex-shrink:0}
-.tl{font-size:10px;color:#aaa;white-space:nowrap}
+.ts{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#f5f5f2;outline:none;height:36px}
+.tn{border:1px solid #d0ccc6;border-radius:3px;padding:2px 4px;font-size:16px;background:#f5f5f2;color:#f5f5f2;outline:none;height:36px;width:52px}
+.tc{width:36px;height:36px;padding:1px;border:1px solid #d0ccc6;border-radius:3px;cursor:pointer}
+.sep{width:1px;height:24px;background:#e8e4de;margin:0 2px;flex-shrink:0}
+.tl{font-size:14px;color:#999;white-space:nowrap}
 
 /* ── 데스크탑 툴바 (모바일에서 숨김) ── */
 #d-toolbar{
-  flex-shrink:0;background:#1e1e1e;
-  border-bottom:1px solid #111;
+  flex-shrink:0;background:#ffffff;
+  border-bottom:1px solid #e0ddd8;
   display:none; /* JS로 데스크탑에서만 표시 */
 }
-#tb1,#tb2{display:flex;align-items:center;gap:4px;padding:4px 8px;overflow-x:auto;min-height:30px;scrollbar-width:none}
+#tb1,#tb2{display:flex;align-items:center;gap:6px;padding:6px 10px;overflow-x:auto;min-height:48px;scrollbar-width:none}
 #tb1::-webkit-scrollbar,#tb2::-webkit-scrollbar{display:none}
-#tb1{border-bottom:1px solid #111}
-#d-exportBtn{background:#1a7a1a;color:#fff;border:none;border-radius:3px;padding:0 12px;font-size:11px;font-weight:600;cursor:pointer;height:22px}
+#tb1{border-bottom:1px solid #e0ddd8}
+#d-exportBtn{background:#1a7a1a;color:#fff;border:none;border-radius:3px;padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;height:36px}
 
 /* ── 모바일 상단바 ── */
 #m-topbar{
   flex-shrink:0;height:44px;
-  background:#1e1e1e;border-bottom:1px solid #111;
+  background:#ffffff;border-bottom:1px solid #e0ddd8;
   display:flex;align-items:center;gap:6px;
   padding:0 8px;overflow-x:auto;scrollbar-width:none;
 }
 #m-topbar::-webkit-scrollbar{display:none}
-#m-topbar .tb{height:28px;font-size:11px;padding:0 10px}
+#m-topbar .tb{height:36px;font-size:15px;padding:0 10px}
 #m-export-btn{
   background:#1a7a1a;color:#fff;border:none;border-radius:14px;
-  padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;
+  padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;
   margin-left:auto;flex-shrink:0;
 }
 
@@ -58,80 +59,80 @@ body{
 
 /* ── 데스크탑 썸네일 패널 ── */
 #panel-left{
-  width:110px;background:#1e1e1e;
-  border-right:1px solid #111;
+  width:110px;background:#ffffff;
+  border-right:1px solid #e0ddd8;
   overflow-y:auto;padding:6px 4px;
   flex-shrink:0;display:none;
-  scrollbar-width:thin;scrollbar-color:#333 transparent;
+  scrollbar-width:thin;scrollbar-color:#555 transparent;
 }
-#panel-left h4{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;padding:0 2px}
-.sthumb{display:flex;flex-direction:column;margin-bottom:5px;cursor:pointer;border:1.5px solid #2a2a2a;border-radius:3px;overflow:hidden}
+#panel-left h4{font-size:13px;color:#999;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;padding:0 2px}
+.sthumb{display:flex;flex-direction:column;margin-bottom:5px;cursor:pointer;border:1.5px solid #ddd8d0;border-radius:3px;overflow:hidden}
 .sthumb:hover{border-color:#4a7ef0}.sthumb.on{border-color:#1a56db}
-.sthumb-row{display:flex;background:#111}
+.sthumb-row{display:flex;background:#f8f7f5}
 .sthumb-l,.sthumb-r{flex:1;background:#fff;overflow:hidden}
 .sthumb-l canvas,.sthumb-r canvas{display:block;width:100%;height:100%}
-.sthumb-spine{width:2px;background:#444;flex-shrink:0}
-.sthumb-nums{display:flex;justify-content:space-between;padding:1px 4px;font-size:7px;color:#555;background:#111}
+.sthumb-spine{width:2px;background:#ddd8d0;flex-shrink:0}
+.sthumb-nums{display:flex;justify-content:space-between;padding:1px 4px;font-size:12px;color:#999;background:#f8f7f5}
 
 /* ── 캔버스 영역 ── */
 #canvas-area{
   flex:1;display:flex;flex-direction:column;
   align-items:center;overflow:auto;
-  padding:12px;background:#3a3a3a;
+  padding:12px;background:#f0f0ed;
   min-height:0;min-width:0;
 }
-#spread-label{font-size:10px;color:#666;margin-bottom:6px;flex-shrink:0;text-align:center}
+#spread-label{font-size:14px;color:#999;margin-bottom:6px;flex-shrink:0;text-align:center}
 #wrap{position:relative;line-height:0;flex-shrink:0}
 #c{display:block;touch-action:none;cursor:default}
 #gsvg,#ssvg{position:absolute;top:0;left:0;pointer-events:none}
 
 /* ── 데스크탑 속성 패널 ── */
 #panel-right{
-  width:200px;background:#1e1e1e;
-  border-left:1px solid #111;
+  width:200px;background:#ffffff;
+  border-left:1px solid #e0ddd8;
   padding:10px 8px;overflow-y:auto;
   flex-shrink:0;display:none;
-  scrollbar-width:thin;scrollbar-color:#333 transparent;
+  scrollbar-width:thin;scrollbar-color:#555 transparent;
 }
-.ph{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin:9px 0 5px}
+.ph{font-size:13px;color:#999;text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin:9px 0 5px}
 .ph:first-child{margin-top:0}
-.pr{margin-bottom:7px}
-.pr label{font-size:10px;color:#666;display:block;margin-bottom:2px}
-.pr input,.pr select,.pr textarea{width:100%;border:1px solid #2a2a2a;border-radius:3px;padding:3px 6px;font-size:11px;background:#111;color:#eee;outline:none}
+.pr{margin-bottom:10px}
+.pr label{font-size:14px;color:#999;display:block;margin-bottom:2px}
+.pr input,.pr select,.pr textarea{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:7px 9px;font-size:16px;background:#f8f7f5;color:#f5f5f2;outline:none}
 .pr textarea{resize:vertical;min-height:44px;font-family:inherit}
-.pr2{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:7px}
-.pr2 label{font-size:10px;color:#666;display:block;margin-bottom:2px}
-.pr2 input{width:100%;border:1px solid #2a2a2a;border-radius:3px;padding:3px 5px;font-size:11px;background:#111;color:#eee;outline:none}
+.pr2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.pr2 label{font-size:14px;color:#999;display:block;margin-bottom:2px}
+.pr2 input{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:7px 8px;font-size:16px;background:#f8f7f5;color:#f5f5f2;outline:none}
 .ag{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:3px}
-.ab{border:1px solid #2a2a2a;border-radius:3px;padding:3px 0;font-size:13px;cursor:pointer;background:#111;color:#888;text-align:center}
-.ab:hover{background:#222;color:#fff}
-.ac{width:100%;border:1px solid #2a2a2a;border-radius:3px;padding:5px;font-size:10px;cursor:pointer;background:#111;color:#888;margin-bottom:3px;text-align:center}
-.ac:hover{background:#222}
+.ab{border:1px solid #d8d4ce;border-radius:3px;padding:3px 0;font-size:17px;cursor:pointer;background:#f8f7f5;color:#888;text-align:center}
+.ab:hover{background:#f0ede8;color:#fff}
+.ac{width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:9px;font-size:15px;cursor:pointer;background:#f8f7f5;color:#888;margin-bottom:3px;text-align:center}
+.ac:hover{background:#f0ede8}
 .ac.red{color:#d05555;border-color:#5a2020}
-.hr{height:1px;background:#1a1a1a;margin:7px 0}
-#no-sel{font-size:10px;color:#444;line-height:1.8}
+.hr{height:1px;background:#f5f5f2;margin:7px 0}
+#no-sel{font-size:14px;color:#777;line-height:1.8}
 
 /* ── 모바일 하단 탭바 (flex - position:fixed 없음!) ── */
 #m-tabbar{
   flex-shrink:0;height:56px;
-  background:#1e1e1e;border-top:1px solid #111;
+  background:#ffffff;border-top:1px solid #e0ddd8;
   display:flex; /* 기본 보임 - JS로 데스크탑에서만 숨김 */
 }
 .m-tab{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:2px;border:none;background:none;
-  color:#555;font-size:9px;cursor:pointer;
+  color:#999;font-size:13px;cursor:pointer;
   padding:4px 2px;
 }
-.m-tab .ico{font-size:20px;line-height:1.2}
+.m-tab .ico{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
 .m-tab.on{color:#1a56db}
 .m-tab:active{opacity:.6}
 
 /* ── 모바일 하단 시트 (position:fixed OK - 오버레이라서) ── */
 #m-sheet{
   position:fixed;left:0;right:0;bottom:0;
-  background:#1a1a1a;border-top:1px solid #333;
+  background:#f5f5f2;border-top:1px solid #ddd8d0;
   border-radius:14px 14px 0 0;
   max-height:60%;overflow-y:auto;
   transform:translateY(105%);
@@ -140,30 +141,30 @@ body{
   padding:0 14px 24px;
 }
 #m-sheet.open{transform:translateY(0)}
-.sheet-handle{width:40px;height:4px;background:#333;border-radius:2px;margin:10px auto 12px}
+.sheet-handle{width:40px;height:4px;background:#e8e4de;border-radius:2px;margin:10px auto 12px}
 
-/* ── 텍스트 입력 오버레이 ── */
+/* ── Text 입력 오버레이 ── */
 #text-overlay{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.7);z-index:600;
+  background:rgba(0,0,0,.45);z-index:600;
   flex-direction:column;justify-content:flex-end;
 }
 #text-overlay.show{display:flex}
-#text-box{background:#1a1a1a;border-radius:14px 14px 0 0;padding:16px;flex-shrink:0}
-#text-box h3{font-size:13px;color:#aaa;margin-bottom:10px}
+#text-box{background:#f5f5f2;border-radius:14px 14px 0 0;padding:16px;flex-shrink:0}
+#text-box h3{font-size:17px;color:#999;margin-bottom:10px}
 #text-input{
-  width:100%;background:#111;border:1px solid #444;
-  border-radius:8px;padding:12px;color:#eee;font-size:16px;
+  width:100%;background:#f8f7f5;border:1px solid #d0ccc6;
+  border-radius:8px;padding:12px;color:#f5f5f2;font-size:18px;
   height:90px;resize:none;outline:none;font-family:inherit;display:block;
 }
 #text-btns{display:flex;gap:8px;margin-top:12px}
-#text-btns button{flex:1;padding:14px;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:700}
-#text-cancel{background:#2a2a2a;color:#aaa}
+#text-btns button{flex:1;padding:14px;border:none;border-radius:8px;font-size:17px;cursor:pointer;font-weight:700}
+#text-cancel{background:#eeebe6;color:#999}
 #text-confirm{background:#1a56db;color:#fff}
-#text-spacer{flex-shrink:0;height:0;background:#1a1a1a;transition:height .1s}
+#text-spacer{flex-shrink:0;height:0;background:#f5f5f2;transition:height .1s}
 
-/* ── 폰트 선택 옵션 ── */
-select optgroup{background:#1a1a1a}
+/* ── Font Select 옵션 ── */
+select optgroup{background:#f5f5f2}
 </style>
 </head>
 <body>
@@ -171,29 +172,44 @@ select optgroup{background:#1a1a1a}
 <!-- 데스크탑 툴바 -->
 <div id="d-toolbar">
   <div id="tb1">
-    <button class="tb on" id="btn-select" onclick="setTool('select')">▶ 선택</button>
-    <button class="tb" id="btn-text" onclick="setTool('text')">T 텍스트</button>
-    <button class="tb" id="btn-image" onclick="document.getElementById('fi').click()">🖼 이미지</button>
+    <button class="tb on" id="btn-select" style="height:36px" onclick="setTool('select')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg> Select</button>
+    <button class="tb" id="btn-text" style="height:36px" onclick="setTool('text')"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><text x="1" y="11" font-size="11" font-weight="700" font-family="serif" fill="currentColor">T</text></svg> Text</button>
+    <button class="tb" id="btn-image" style="height:36px" onclick="document.getElementById('fi').click()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="4" cy="4.5" r="1" fill="currentColor"/><path d="M1 8.5l3-3 2.5 2.5 2-2 3.5 3.5H1z" fill="currentColor"/></svg> Image</button>
     <input type="file" id="fi" accept="image/*" style="display:none">
     <div class="sep"></div>
-    <button class="tb on" id="btn-bleed" onclick="tog('bleed')">블리드</button>
-    <button class="tb on" id="btn-art" onclick="tog('art')">아트보드</button>
-    <button class="tb on" id="btn-snap" onclick="tog('snap')">스냅</button>
+    <button class="tb on" id="btn-bleed" style="height:36px" onclick="tog('bleed')">Bleed</button>
+    <button class="tb on" id="btn-art" style="height:36px" onclick="tog('art')">Artboard</button>
+    <button class="tb on" id="btn-snap" style="height:36px" onclick="tog('snap')">Snap</button>
     <div class="sep"></div>
-    <span id="d-status" style="font-size:10px;color:#555">p32·1</span>
+    <span id="d-status" style="font-size:10px;color:#999">p32·1</span>
     <div style="flex:1"></div>
-    <button id="d-exportBtn" onclick="exportPDF()">⬇ PDF 내보내기</button>
+    <div style="display:flex;align-items:center;gap:4px;height:36px">
+      <button class="tb" onclick="saveJSON()" title="Save" style="height:36px;display:inline-flex;align-items:center;gap:4px">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+        Save
+      </button>
+      <button class="tb" onclick="document.getElementById('fi-json').click()" title="Load" style="height:36px;display:inline-flex;align-items:center;gap:4px">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Load
+      </button>
+      <button class="tb" onclick="clearAllConfirm()" title="Reset all" style="height:36px;display:inline-flex;align-items:center;gap:4px;color:#d05555">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Reset
+      </button>
+    </div>
+        <div class="sep"></div>
+    <button id="d-exportBtn" onclick="exportPDF()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> PDF 내보내기</button>
   </div>
   <div id="tb2">
-    <label class="tl">폰트</label>
-    <select class="ts" id="sfont" onchange="applyTxtStyle()" style="width:110px">
+    <label class="tl">Font</label>
+    <select class="ts" id="sfont" style="min-width:110px" onchange="applyTxtStyle()" style="width:110px">
       <optgroup label="시스템">
-        <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">맑은고딕</option>
+        <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">Malgun Gothic</option>
         <option value="'Batang','AppleMyungjo',serif">바탕</option>
         <option value="Georgia,serif">Georgia</option>
         <option value="Arial,sans-serif">Arial</option>
       </optgroup>
-      <optgroup label="한국어 웹폰트">
+      <optgroup label="한국어 웹Font">
         <option value="'Nanum Gothic',sans-serif">나눔고딕</option>
         <option value="'Nanum Myeongjo',serif">나눔명조</option>
         <option value="'Noto Sans KR',sans-serif">Noto Sans KR</option>
@@ -203,7 +219,7 @@ select optgroup{background:#1a1a1a}
         <option value="'Gaegu',cursive">개구체</option>
         <option value="'Sunflower',sans-serif">해바라기</option>
       </optgroup>
-      <optgroup label="영문 웹폰트">
+      <optgroup label="영문 웹Font">
         <option value="'Playfair Display',serif">Playfair Display</option>
         <option value="'Montserrat',sans-serif">Montserrat</option>
         <option value="'Lato',sans-serif">Lato</option>
@@ -212,36 +228,53 @@ select optgroup{background:#1a1a1a}
         <option value="'Dancing Script',cursive">Dancing Script</option>
       </optgroup>
     </select>
-    <label class="tl">크기</label><input class="tn" type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTxtStyle()">
+    <label class="tl">Size</label><input class="tn" type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTxtStyle()">
     <label class="tl">색</label><input class="tc" type="color" id="scolor" value="#000000" onchange="applyTxtStyle()">
-    <label class="tl">굵기</label>
+    <label class="tl">Weight</label>
     <select class="ts" id="sweight" onchange="applyTxtStyle()" style="width:80px">
       <option value="300">Light</option><option value="400" selected>Regular</option>
       <option value="500">Medium</option><option value="700">Bold</option><option value="800">ExtraBold</option>
     </select>
-    <label class="tl">스타일</label>
+    <label class="tl">Style</label>
     <select class="ts" id="sstyle" onchange="applyTxtStyle()" style="width:62px">
-      <option value="normal" selected>보통</option><option value="italic">이탤릭</option>
+      <option value="normal" selected>Normal</option><option value="italic">Italic</option>
     </select>
+    <div class="sep"></div>
+    <label class="tl">Text BG</label>
+    <input class="tc" type="color" id="sbgcolor" value="#ffffff" onchange="applyTxtStyle()">
+    <label class="tl" style="display:flex;align-items:center;gap:4px;cursor:pointer">
+      <input type="checkbox" id="sbgon" onchange="applyTxtStyle()" style="width:16px;height:16px;cursor:pointer;accent-color:#1a56db">On
+    </label>
   </div>
 </div>
 
 <!-- 모바일 상단바 -->
 <div id="m-topbar">
-  <button class="tb on" id="m-btn-bleed" onclick="tog('bleed')">블리드</button>
-  <button class="tb on" id="m-btn-art" onclick="tog('art')">아트보드</button>
-  <button class="tb on" id="m-btn-snap" onclick="tog('snap')">스냅</button>
-  <span id="m-status" style="font-size:10px;color:#555;margin-left:6px;white-space:nowrap">p32·1</span>
-  <button id="m-export-btn" onclick="exportPDF()">⬇ PDF</button>
+  <button class="tb on" id="m-btn-bleed" onclick="tog('bleed')">Bleed</button>
+  <button class="tb on" id="m-btn-art" onclick="tog('art')">Artboard</button>
+  <button class="tb on" id="m-btn-snap" onclick="tog('snap')">Snap</button>
+  <span id="m-status" style="font-size:10px;color:#999;margin-left:6px;white-space:nowrap">p32·1</span>
+  <button id="m-export-btn" onclick="exportPDF()"><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> PDF</button>
+  <div style="width:1px;height:16px;background:#e0ddd8;margin:0 2px;flex-shrink:0"></div>
+  <button class="tb" onclick="saveJSON()" title="Save" style="height:28px;padding:0 10px;flex-shrink:0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+  </button>
+  <button class="tb" onclick="document.getElementById('fi-json').click()" title="Load" style="height:28px;padding:0 10px;flex-shrink:0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </button>
+  <button class="tb" onclick="clearAllConfirm()" title="Reset" style="height:28px;padding:0 10px;flex-shrink:0;color:#d05555">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </button>
 </div>
 
+<input type="file" id="fi-json" accept=".json" style="display:none">
 <input type="file" id="fi-m" accept="image/*" style="display:none">
 
 <!-- 메인 -->
 <div id="main">
-  <div id="panel-left"><h4>스프레드</h4><div id="thumbs"></div></div>
+  <div id="panel-left"><h4>Spread</h4><div id="thumbs"></div></div>
   <div id="canvas-area">
-    <div id="spread-label">스프레드 32 · 1</div>
+    <div id="spread-label">Spread 32 · 1</div>
     <div id="wrap">
       <canvas id="c"></canvas>
       <svg id="gsvg"></svg>
@@ -249,9 +282,9 @@ select optgroup{background:#1a1a1a}
     </div>
   </div>
   <div id="panel-right">
-    <div id="no-sel">요소를 클릭해 선택하세요.<br><br>🖼 이미지는 양쪽 배치 가능<br>T 텍스트는 더블클릭 편집</div>
+    <div id="no-sel">Click an element to select.<br><br>🖼 Image는 양쪽 배치 가능<br>T Text: double-click to edit</div>
     <div id="sel-wrap" style="display:none">
-      <div class="ph">위치 / 크기</div>
+      <div class="ph">Position / Size</div>
       <div class="pr2">
         <div><label>X (mm)</label><input type="number" id="px" step="0.1" oninput="fromPanel()"></div>
         <div><label>Y (mm)</label><input type="number" id="py" step="0.1" oninput="fromPanel()"></div>
@@ -261,43 +294,43 @@ select optgroup{background:#1a1a1a}
         <div><label>H (mm)</label><input type="number" id="ph2" step="0.1" min="1" oninput="fromPanelH()"></div>
       </div>
       <div style="margin-bottom:7px;display:flex;align-items:center;gap:5px" id="ratio-row">
-        <button id="btn-ratio" onclick="toggleRatio()" style="flex:1;border:1px solid #2a2a2a;border-radius:3px;padding:4px;font-size:10px;cursor:pointer;background:#1a56db;color:#fff">🔒 비율 유지</button>
-        <span id="ratio-val" style="font-size:9px;color:#444"></span>
+        <button id="btn-ratio" onclick="toggleRatio()" style="flex:1;border:1px solid #d8d4ce;border-radius:3px;padding:4px;font-size:10px;cursor:pointer;background:#1a56db;color:#fff">● Lock ratio</button>
+        <span id="ratio-val" style="font-size:9px;color:#777"></span>
       </div>
-      <div class="pr" id="txtrow"><label>텍스트</label><textarea id="ptxt" oninput="fromPanel()"></textarea></div>
-      <div class="pr" id="fsrow"><label>폰트 크기</label><input type="number" id="pfs" step="0.5" min="1" oninput="fromPanel()"></div>
-      <div class="ph">정렬 — 왼쪽 페이지</div>
-      <div class="ag"><button class="ab" onclick="aln('L','L')">⇤</button><button class="ab" onclick="aln('CX','L')">↔</button><button class="ab" onclick="aln('R','L')">⇥</button><button class="ab" onclick="aln('F','L')">⛶</button></div>
-      <div class="ag"><button class="ab" onclick="aln('T','L')">⇡</button><button class="ab" onclick="aln('CY','L')">↕</button><button class="ab" onclick="aln('B','L')">⇣</button><button class="ab" onclick="aln('BF','L')">⊞</button></div>
-      <div class="ph">정렬 — 오른쪽 페이지</div>
-      <div class="ag"><button class="ab" onclick="aln('L','R')">⇤</button><button class="ab" onclick="aln('CX','R')">↔</button><button class="ab" onclick="aln('R','R')">⇥</button><button class="ab" onclick="aln('F','R')">⛶</button></div>
-      <div class="ag"><button class="ab" onclick="aln('T','R')">⇡</button><button class="ab" onclick="aln('CY','R')">↕</button><button class="ab" onclick="aln('B','R')">⇣</button><button class="ab" onclick="aln('BF','R')">⊞</button></div>
-      <div class="ph">정렬 — 스프레드</div>
-      <div class="ag"><button class="ab" onclick="aln('L','S')">⇤</button><button class="ab" onclick="aln('CX','S')">↔</button><button class="ab" onclick="aln('R','S')">⇥</button><button class="ab" onclick="aln('F','S')">⛶</button></div>
-      <div class="ag"><button class="ab" onclick="aln('T','S')">⇡</button><button class="ab" onclick="aln('CY','S')">↕</button><button class="ab" onclick="aln('B','S')">⇣</button><button class="ab" onclick="aln('BF','S')">⊞</button></div>
-      <div class="ph">다른 요소와 정렬</div>
-      <div class="pr"><label>기준 요소</label><select id="refsel" style="width:100%;border:1px solid #2a2a2a;border-radius:3px;padding:3px 5px;font-size:10px;background:#111;color:#eee;outline:none"></select></div>
-      <div class="ag"><button class="ab" onclick="alnRef('L')">⇤</button><button class="ab" onclick="alnRef('CX')">↔</button><button class="ab" onclick="alnRef('R')">⇥</button><button class="ab" onclick="alnRef('AL')">◁|</button></div>
-      <div class="ag"><button class="ab" onclick="alnRef('T')">⇡</button><button class="ab" onclick="alnRef('CY')">↕</button><button class="ab" onclick="alnRef('B')">⇣</button><button class="ab" onclick="alnRef('AT')">△|</button></div>
+      <div class="pr" id="txtrow"><label>Text</label><textarea id="ptxt" oninput="fromPanel()"></textarea></div>
+      <div class="pr" id="fsrow"><label>Font size</label><input type="number" id="pfs" step="0.5" min="1" oninput="fromPanel()"></div>
+      <div class="ph">Align — Left page</div>
+      <div class="ag"><button class="ab" onclick="aln('L','L')">|←</button><button class="ab" onclick="aln('CX','L')">⇔</button><button class="ab" onclick="aln('R','L')">→|</button><button class="ab" onclick="aln('F','L')">□</button></div>
+      <div class="ag"><button class="ab" onclick="aln('T','L')">↑</button><button class="ab" onclick="aln('CY','L')">⇕</button><button class="ab" onclick="aln('B','L')">↓</button><button class="ab" onclick="aln('BF','L')">⊡</button></div>
+      <div class="ph">Align — Right page</div>
+      <div class="ag"><button class="ab" onclick="aln('L','R')">|←</button><button class="ab" onclick="aln('CX','R')">⇔</button><button class="ab" onclick="aln('R','R')">→|</button><button class="ab" onclick="aln('F','R')">□</button></div>
+      <div class="ag"><button class="ab" onclick="aln('T','R')">↑</button><button class="ab" onclick="aln('CY','R')">⇕</button><button class="ab" onclick="aln('B','R')">↓</button><button class="ab" onclick="aln('BF','R')">⊡</button></div>
+      <div class="ph">Align — Spread</div>
+      <div class="ag"><button class="ab" onclick="aln('L','S')">|←</button><button class="ab" onclick="aln('CX','S')">⇔</button><button class="ab" onclick="aln('R','S')">→|</button><button class="ab" onclick="aln('F','S')">□</button></div>
+      <div class="ag"><button class="ab" onclick="aln('T','S')">↑</button><button class="ab" onclick="aln('CY','S')">⇕</button><button class="ab" onclick="aln('B','S')">↓</button><button class="ab" onclick="aln('BF','S')">⊡</button></div>
+      <div class="ph">Align to element</div>
+      <div class="pr"><label>Reference</label><select id="refsel" style="width:100%;border:1px solid #d8d4ce;border-radius:3px;padding:3px 5px;font-size:10px;background:#f8f7f5;color:#f5f5f2;outline:none"></select></div>
+      <div class="ag"><button class="ab" onclick="alnRef('L')">|←</button><button class="ab" onclick="alnRef('CX')">⇔</button><button class="ab" onclick="alnRef('R')">→|</button><button class="ab" onclick="alnRef('AL')">◁</button></div>
+      <div class="ag"><button class="ab" onclick="alnRef('T')">↑</button><button class="ab" onclick="alnRef('CY')">⇕</button><button class="ab" onclick="alnRef('B')">↓</button><button class="ab" onclick="alnRef('AT')">△</button></div>
       <div class="hr"></div>
-      <button class="ac" onclick="lyrUp()">앞으로</button>
-      <button class="ac" onclick="lyrDn()">뒤로</button>
-      <button class="ac red" onclick="delEl()">삭제</button>
+      <button class="ac" onclick="lyrUp()">Forward</button>
+      <button class="ac" onclick="lyrDn()">Backward</button>
+      <button class="ac red" onclick="delEl()">Delete</button>
     </div>
     <div class="hr"></div>
-    <div class="ph" style="margin-top:0">스프레드 작업</div>
-    <button class="ac" onclick="clrSpread()">이 스프레드 초기화</button>
-    <button class="ac" onclick="cpyAll()">전체에 복사</button>
+    <div class="ph" style="margin-top:0">Spread</div>
+    <button class="ac" onclick="clrSpread()">Clear Spread</button>
+    <button class="ac" onclick="cpyAll()">Copy to all</button>
   </div>
 </div>
 
 <!-- 모바일 하단 탭바 (flex child - position:fixed 없음) -->
 <div id="m-tabbar">
-  <button class="m-tab on" id="mt-select" onclick="mTab('select')"><span class="ico">▶</span><span>선택</span></button>
-  <button class="m-tab" id="mt-text" onclick="mTab('text')"><span class="ico">T</span><span>텍스트</span></button>
-  <button class="m-tab" id="mt-image" onclick="document.getElementById('fi-m').click()"><span class="ico">🖼</span><span>이미지</span></button>
-  <button class="m-tab" id="mt-pages" onclick="mSheet('pages')"><span class="ico">📄</span><span>페이지</span></button>
-  <button class="m-tab" id="mt-props" onclick="mSheet('props')"><span class="ico">⚙️</span><span>속성</span></button>
+  <button class="m-tab on" id="mt-select" onclick="mTab('select')"><span class="ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M6 4l12 7-12 7V4z" fill="currentColor"/></svg></span><span>Select</span></button>
+  <button class="m-tab" id="mt-text" onclick="mTab('text')"><span class="ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><text x="3" y="18" font-size="18" font-weight="700" font-family="serif" fill="currentColor">T</text></svg></span><span>Text</span></button>
+  <button class="m-tab" id="mt-image" onclick="document.getElementById('fi-m').click()"><span class="ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="3" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="7.5" cy="8.5" r="1.8" fill="currentColor"/><path d="M2 15l5-5 4 4 3-3 6 6H2z" fill="currentColor"/></svg></span><span>Image</span></button>
+  <button class="m-tab" id="mt-pages" onclick="mSheet('pages')"><span class="ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="2" width="9" height="11" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="9" width="9" height="11" rx="1" stroke="currentColor" stroke-width="1.8" fill="white"/><rect x="9" y="9" width="9" height="11" rx="1" stroke="currentColor" stroke-width="1.8"/></svg></span><span>Pages</span></button>
+  <button class="m-tab" id="mt-props" onclick="mSheet('props')"><span class="ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M11 2v3M11 17v3M2 11h3M17 11h3M4.2 4.2l2.1 2.1M15.7 15.7l2.1 2.1M4.2 17.8l2.1-2.1M15.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Props</span></button>
 </div>
 
 <!-- 하단 시트 -->
@@ -306,14 +339,14 @@ select optgroup{background:#1a1a1a}
   <div id="m-sheet-body"></div>
 </div>
 
-<!-- 텍스트 입력 오버레이 -->
+<!-- Text 입력 오버레이 -->
 <div id="text-overlay">
   <div id="text-box">
-    <h3>텍스트 편집</h3>
-    <textarea id="text-input" placeholder="텍스트를 입력하세요"></textarea>
+    <h3>Text 편집</h3>
+    <textarea id="text-input" placeholder="Text를 입력하세요"></textarea>
     <div id="text-btns">
-      <button id="text-cancel" onclick="closeTxtOverlay()">취소</button>
-      <button id="text-confirm" onclick="confirmTxt()">확인</button>
+      <button id="text-cancel" onclick="closeTxtOverlay()">Cancel</button>
+      <button id="text-confirm" onclick="confirmTxt()">OK</button>
     </div>
   </div>
   <div id="text-spacer"></div>
@@ -357,7 +390,7 @@ const ssvg=document.getElementById('ssvg');
 
 // ── 레이아웃 ──
 function initLayout(){
-  isMobile=window.innerWidth<=1100;
+  isMobile=window.innerWidth<=768;
   const show=(id,v)=>{const el=document.getElementById(id);if(el)el.style.display=v;};
   if(isMobile){
     show('d-toolbar','none');
@@ -374,14 +407,17 @@ function initLayout(){
     show('m-tabbar','none');
     document.getElementById('canvas-area').style.padding='12px';
   }
-  calcDS();
+  // 레이아웃 반영 후 크기 계산
+  requestAnimationFrame(()=>{ calcDS(); render(); });
 }
 
 function calcDS(){
   const area=document.getElementById('canvas-area');
   const r=area.getBoundingClientRect();
-  const availW=Math.max(r.width-16,80);
-  const availH=Math.max(r.height-30,80);
+  const toolbarH=isMobile?44:66;
+  const tabbarH=isMobile?56:0;
+  const availW=Math.max(r.width>0?r.width-16:window.innerWidth-16, 80);
+  const availH=Math.max(r.height>0?r.height-30:window.innerHeight-toolbarH-tabbarH-30, 80);
   DS=Math.min(Math.max(Math.min(availW/CW,availH/CH),0.04),0.55);
   DW=Math.round(CW*DS);DH=Math.round(CH*DS);
   cv.style.width=DW+'px';cv.style.height=DH+'px';
@@ -394,14 +430,17 @@ function calcDS(){
 window.addEventListener('resize',()=>{initLayout();render();});
 
 // ── 페이지 라벨 ──
-function pgl(si){return si===0?[32,1]:[si*2,si*2+1]}
+function pgl(si){
+  if(si===0) return['Back Cover','Front Cover'];
+  return[si*2,si*2+1];
+}
 
 // ── 렌더 ──
 function render(){
   ctx.clearRect(0,0,CW,CH);
-  ctx.fillStyle='#555';ctx.fillRect(0,0,CW,CH);
-  ctx.fillStyle='#e0ddd8';ctx.fillRect(0,0,p(LB.w),CH);
-  ctx.fillStyle='#e0ddd8';ctx.fillRect(p(RB.x),0,p(RB.w),CH);
+  ctx.fillStyle='#c8c4be';ctx.fillRect(0,0,CW,CH);
+  ctx.fillStyle='#dedad4';ctx.fillRect(0,0,p(LB.w),CH);
+  ctx.fillStyle='#dedad4';ctx.fillRect(p(RB.x),0,p(RB.w),CH);
   ctx.fillStyle='#fff';ctx.fillRect(p(LT.x),p(LT.y),p(LT.w),p(LT.h));
   ctx.fillStyle='#fff';ctx.fillRect(p(RT.x),p(RT.y),p(RT.w),p(RT.h));
   spreads[cur].els.forEach(el=>drawEl(ctx,el,el===sel));
@@ -430,8 +469,18 @@ function drawEl(c,el,isSel){
   } else {
     const fs=p(el.fs);
     c.font=`${el.fst||'normal'} ${el.fw||'400'} ${fs}px ${el.ff}`;
-    c.fillStyle=el.col;c.textBaseline='top';
-    el.txt.split('\n').forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*fs*1.35));
+    c.textBaseline='top';
+    const lines=el.txt.split('\n');
+    const lh=fs*1.35;
+    // 배경색 그리기
+    if(el.bgon&&el.bgcol){
+      const maxW=lines.reduce((a,b)=>Math.max(a,c.measureText(b).width),0);
+      const pad=fs*0.2;
+      c.fillStyle=el.bgcol;
+      c.fillRect(p(el.x)-pad, p(el.y)-pad, maxW+pad*2, lh*lines.length+pad*2);
+    }
+    c.fillStyle=el.col;
+    lines.forEach((ln,i)=>c.fillText(ln,p(el.x),p(el.y)+i*lh));
     if(isSel){
       const b=getBounds(el);
       c.strokeStyle='#4af';c.lineWidth=2;c.setLineDash([6,3]);
@@ -451,7 +500,7 @@ function drawGuides(){
     s+=`<line x1="${dp(SW)}" y1="0" x2="${dp(SW)}" y2="${dp(SH)}" stroke="rgba(255,60,60,.9)" stroke-width="0.8"/>`;
     s+=`<line x1="${dp(LB.w)}" y1="0" x2="${dp(LB.w)}" y2="${dp(SH)}" stroke="rgba(255,60,60,.4)" stroke-width="0.6" stroke-dasharray="3,2"/>`;
     s+=`<line x1="${dp(RB.x)}" y1="0" x2="${dp(RB.x)}" y2="${dp(SH)}" stroke="rgba(255,60,60,.4)" stroke-width="0.6" stroke-dasharray="3,2"/>`;
-    s+=`<text x="2" y="9" font-size="7" fill="rgba(255,80,80,.9)" font-family="sans-serif">블리드</text>`;
+    s+=`<text x="2" y="9" font-size="7" fill="rgba(255,80,80,.9)" font-family="sans-serif">Bleed</text>`;
   }
   if(showArt){
     s+=`<line x1="${dp(LT.x)}" y1="${dp(LT.y)}" x2="${dp(RT.x+RT.w)}" y2="${dp(LT.y)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`;
@@ -460,8 +509,13 @@ function drawGuides(){
     s+=`<line x1="${dp(RT.x+RT.w)}" y1="${dp(RT.y)}" x2="${dp(RT.x+RT.w)}" y2="${dp(RT.y+RT.h)}" stroke="rgba(80,160,255,.9)" stroke-width="0.9"/>`;
     s+=`<line x1="${dp(SPINE)}" y1="0" x2="${dp(SPINE)}" y2="${dp(SH)}" stroke="rgba(255,210,50,.9)" stroke-width="1" stroke-dasharray="5,3"/>`;
     const[lp,rp]=pgl(cur);
-    s+=`<text x="${dp(LT.x+1)}" y="${dp(LT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${lp}</text>`;
-    s+=`<text x="${dp(RT.x+1)}" y="${dp(RT.y+4)}" font-size="7" fill="rgba(80,160,255,.85)" font-family="sans-serif">p${rp}</text>`;
+    // Back/Front Cover는 더 크고 강조
+    const iscover=(typeof lp==='string');
+    const lblSize=iscover?'8':'7';
+    const lblColor=iscover?'rgba(30,100,220,1)':'rgba(80,160,255,.85)';
+    const lblWeight=iscover?'bold':'normal';
+    s+=`<text x="${dp(LT.x+1)}" y="${dp(LT.y+5)}" font-size="${lblSize}" font-weight="${lblWeight}" fill="${lblColor}" font-family="sans-serif">${lp}</text>`;
+    s+=`<text x="${dp(RT.x+1)}" y="${dp(RT.y+5)}" font-size="${lblSize}" font-weight="${lblWeight}" fill="${lblColor}" font-family="sans-serif">${rp}</text>`;
   }
   if(showBleed&&showArt){
     [[LT.x,LT.y],[RT.x+RT.w,LT.y],[LT.x,LT.y+LT.h],[RT.x+RT.w,LT.y+LT.h],[SPINE,LT.y],[SPINE,LT.y+LT.h]].forEach(([mx,my])=>{
@@ -482,7 +536,7 @@ function tog(t){
   if(t!=='snap')render();else ssvg.innerHTML='';
 }
 
-// ── 스냅 ──
+// ── Snap ──
 function doSnap(x,y,w,h){
   if(!snapOn)return{x,y,sx:null,sy:null};
   const xs=[0,BL,SPINE,RT.x+RT.w,SW];
@@ -495,12 +549,12 @@ function doSnap(x,y,w,h){
 }
 function showSnap(sx,sy){
   let s='';
-  if(sx!=null)s+=`<line x1="${dp(sx)}" y1="0" x2="${dp(sx)}" y2="${dp(SH)}" stroke="rgba(255,220,0,.95)" stroke-width="1" stroke-dasharray="3,2"/>`;
-  if(sy!=null)s+=`<line x1="0" y1="${dp(sy)}" x2="${dp(SW)}" y2="${dp(sy)}" stroke="rgba(255,220,0,.95)" stroke-width="1" stroke-dasharray="3,2"/>`;
+  if(sx!=null)s+=`<line x1="${dp(sx)}" y1="0" x2="${dp(sx)}" y2="${dp(SH)}" stroke="rgba(200,120,0,.9)" stroke-width="1" stroke-dasharray="3,2"/>`;
+  if(sy!=null)s+=`<line x1="0" y1="${dp(sy)}" x2="${dp(SW)}" y2="${dp(sy)}" stroke="rgba(200,120,0,.9)" stroke-width="1" stroke-dasharray="3,2"/>`;
   ssvg.innerHTML=s;
 }
 
-// ── 이미지 업로드 ──
+// ── Image 업로드 ──
 function setupImg(id){
   document.getElementById(id).addEventListener('change',function(){
     const file=this.files[0];if(!file)return;
@@ -512,9 +566,9 @@ function setupImg(id){
         let w=PW*.85,h=w*r;
         if(h>PH*.85){h=PH*.85;w=h/r;}
         const el={type:'img',x:SPINE-w/2,y:(SH-h)/2,w,h,img,_ratio:w/h};
-        spreads[cur].els.push(el);sel=el;setTool('select');updatePanel();render();
+        spreads[cur].els.push(el);sel=el;setTool('select');updatePanel();render();autoSave();
       };
-      img.onerror=()=>alert('이미지 로드 실패');
+      img.onerror=()=>alert('Image load failed');
       img.src=ev.target.result;
     };
     reader.readAsDataURL(file);
@@ -562,7 +616,7 @@ function ptrMove(cx,cy){
     updatePanel();render();
   }
 }
-function ptrUp(){dragging=false;resizing=false;ssvg.innerHTML='';}
+function ptrUp(){if(dragging||resizing)autoSave();dragging=false;resizing=false;ssvg.innerHTML='';}
 
 // ── 마우스 ──
 cv.addEventListener('mousedown',e=>ptrDown(e.clientX,e.clientY));
@@ -605,7 +659,7 @@ cv.addEventListener('touchmove',e=>{
 },{passive:false});
 cv.addEventListener('touchend',e=>{e.preventDefault();if(pinching){pinching=false;return;}ptrUp();},{passive:false});
 
-// ── 텍스트 오버레이 ──
+// ── Text 오버레이 ──
 function openTxtOverlay(txt){
   const input=document.getElementById('text-input');
   const spacer=document.getElementById('text-spacer');
@@ -631,10 +685,12 @@ function confirmTxt(){
       fs:parseFloat(document.getElementById('ssize').value)||14,
       col:document.getElementById('scolor').value,
       fw:document.getElementById('sweight').value||'400',
-      fst:document.getElementById('sstyle').value||'normal'};
+      fst:document.getElementById('sstyle').value||'normal',
+      bgcol:document.getElementById('sbgcolor').value,
+      bgon:document.getElementById('sbgon').checked};
     spreads[cur].els.push(el);sel=el;
   }
-  setTool('select');closeTxtOverlay();updatePanel();render();
+  setTool('select');closeTxtOverlay();updatePanel();render();autoSave();
 }
 
 // ── 도구 ──
@@ -657,6 +713,8 @@ function applyTxtStyle(){
   sel.col=document.getElementById('scolor').value;
   sel.fw=document.getElementById('sweight').value||'400';
   sel.fst=document.getElementById('sstyle').value||'normal';
+  sel.bgcol=document.getElementById('sbgcolor').value;
+  sel.bgon=document.getElementById('sbgon').checked;
   render();
 }
 
@@ -666,53 +724,149 @@ function mSheet(type){
   document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('on'));
   document.getElementById('mt-'+type)?.classList.add('on');
   if(type==='pages'){
-    let h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
-    for(let s=0;s<NS;s++){const[lp,rp]=pgl(s);h+=`<div onclick="goTo(${s});closeSheet()" style="background:#111;border:1.5px solid ${s===cur?'#1a56db':'#222'};border-radius:6px;padding:8px;text-align:center;cursor:pointer"><div style="font-size:10px;color:#555;margin-bottom:4px">p${lp}·${rp}</div><div style="width:100%;height:36px;background:#fff;border-radius:3px"></div></div>`;}
-    body.innerHTML=h+'</div>';
-  } else if(type==='props'){
-    if(!sel){body.innerHTML='<div style="color:#444;padding:8px;font-size:12px">요소를 먼저 선택하세요</div>';document.getElementById('m-sheet').classList.add('open');return;}
+    let h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="m-pages-grid">';
+    for(let s=0;s<NS;s++){
+      const[lp,rp]=pgl(s);
+      h+=`<div onclick="goTo(${s});closeSheet()" style="border:2px solid ${s===cur?'#1a56db':'#ddd8d0'};border-radius:8px;overflow:hidden;cursor:pointer;background:#fff">
+        <div style="display:flex;height:52px;background:#f0ede8">
+          <canvas id="mpc-l-${s}" style="flex:1;display:block"></canvas>
+          <div style="width:1px;background:#ddd8d0;flex-shrink:0"></div>
+          <canvas id="mpc-r-${s}" style="flex:1;display:block"></canvas>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:2px 6px;font-size:8px;color:#777;background:#f8f7f5">
+          <span>${lp}</span><span>${rp}</span>
+        </div>
+      </div>`;
+    }
+    h+='</div>';
+    body.innerHTML=h;
+    // 오프스크린에 각 Spread 렌더해서 썸네일 채우기
+    requestAnimationFrame(()=>{
+      const offSp=document.createElement('canvas');
+      offSp.width=CW;offSp.height=CH;
+      const osc=offSp.getContext('2d');
+      const TH=52;
+      for(let s=0;s<NS;s++){
+        osc.clearRect(0,0,CW,CH);
+        osc.fillStyle='#dedad4';osc.fillRect(0,0,CW,CH);
+        osc.fillStyle='#f5f2ee';osc.fillRect(0,0,p(LB.w),CH);
+        osc.fillStyle='#f5f2ee';osc.fillRect(p(RB.x),0,p(RB.w),CH);
+        osc.fillStyle='#fff';osc.fillRect(p(LT.x),p(LT.y),p(LT.w),p(LT.h));
+        osc.fillStyle='#fff';osc.fillRect(p(RT.x),p(RT.y),p(RT.w),p(RT.h));
+        spreads[s].els.forEach(el=>drawEl(osc,el,false));
+        const lSrcW=Math.round(CW*(LB.w/SW));
+        const rSrcX=Math.round(CW*(RB.x/SW));
+        const rSrcW=Math.round(CW*(RB.w/SW));
+        ['l','r'].forEach(side=>{
+          const tc=document.getElementById('mpc-'+side+'-'+s);
+          if(!tc)return;
+          const pr=tc.parentElement;
+          const tw=Math.floor(pr.offsetWidth/2-1)||60;
+          tc.width=tw*2;tc.height=TH*2;
+          tc.style.width=tw+'px';tc.style.height=TH+'px';
+          const tcx=tc.getContext('2d');
+          tcx.fillStyle='#fff';tcx.fillRect(0,0,tw*2,TH*2);
+          if(side==='l') tcx.drawImage(offSp,0,0,lSrcW,CH,0,0,tw*2,TH*2);
+          else tcx.drawImage(offSp,rSrcX,0,rSrcW,CH,0,0,tw*2,TH*2);
+        });
+      }
+    });
+    } else if(type==='props'){
+    if(!sel){body.innerHTML='<div style="color:#777;padding:8px;font-size:12px">Select an element first</div>';document.getElementById('m-sheet').classList.add('open');return;}
     const isImg=sel.type==='img';
-    const inp=(id,val,label,extra='')=>`<div><div style="font-size:10px;color:#555;margin-bottom:3px">${label}</div><input type="number" value="${val}" step="0.1" ${extra} style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>`;
+    const inp=(id,val,label,extra='')=>`<div><div style="font-size:10px;color:#999;margin-bottom:3px">${label}</div><input type="number" value="${val}" step="0.1" ${extra} style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none"></div>`;
     let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">${inp('sx',sel.x.toFixed(1),'X (mm)',`oninput="sel.x=parseFloat(this.value)||0;render()"`)}<br>${inp('sy',sel.y.toFixed(1),'Y (mm)',`oninput="sel.y=parseFloat(this.value)||0;render()"`)}</div>`;
     h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div><div style="font-size:10px;color:#555;margin-bottom:3px">X (mm)</div><input type="number" value="${sel.x.toFixed(1)}" step="0.1" oninput="sel.x=parseFloat(this.value)||0;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>
-      <div><div style="font-size:10px;color:#555;margin-bottom:3px">Y (mm)</div><input type="number" value="${sel.y.toFixed(1)}" step="0.1" oninput="sel.y=parseFloat(this.value)||0;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>
+      <div><div style="font-size:10px;color:#999;margin-bottom:3px">X (mm)</div><input type="number" value="${sel.x.toFixed(1)}" step="0.1" oninput="sel.x=parseFloat(this.value)||0;render()" style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none"></div>
+      <div><div style="font-size:10px;color:#999;margin-bottom:3px">Y (mm)</div><input type="number" value="${sel.y.toFixed(1)}" step="0.1" oninput="sel.y=parseFloat(this.value)||0;render()" style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none"></div>
     </div>`;
     if(isImg){
       h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        <div><div style="font-size:10px;color:#555;margin-bottom:3px">W (mm)</div><input type="number" value="${sel.w.toFixed(1)}" step="0.1" oninput="sel.w=parseFloat(this.value)||10;if(lockRatio&&sel._ratio)sel.h=sel.w/sel._ratio;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>
-        <div><div style="font-size:10px;color:#555;margin-bottom:3px">H (mm)</div><input type="number" value="${sel.h.toFixed(1)}" step="0.1" oninput="sel.h=parseFloat(this.value)||10;if(lockRatio&&sel._ratio)sel.w=sel.h*sel._ratio;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">W (mm)</div><input type="number" value="${sel.w.toFixed(1)}" step="0.1" oninput="sel.w=parseFloat(this.value)||10;if(lockRatio&&sel._ratio)sel.h=sel.w/sel._ratio;render()" style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none"></div>
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">H (mm)</div><input type="number" value="${sel.h.toFixed(1)}" step="0.1" oninput="sel.h=parseFloat(this.value)||10;if(lockRatio&&sel._ratio)sel.w=sel.h*sel._ratio;render()" style="width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none"></div>
       </div>
-      <button onclick="toggleRatio();mSheet('props')" style="width:100%;background:${lockRatio?'#1a56db':'#333'};color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;margin-bottom:12px">${lockRatio?'🔒 비율 유지':'🔓 비율 해제'}</button>`;
+      <button onclick="toggleRatio();mSheet('props')" style="width:100%;background:${lockRatio?'#1a56db':'#e8e4de'};color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;margin-bottom:12px">${lockRatio?'● Lock ratio':'○ Unlock ratio'}</button>`;
     } else {
+      const fontOpts=[
+        ["'Malgun Gothic','Apple SD Gothic Neo',sans-serif","Malgun Gothic"],
+        ["'Batang','AppleMyungjo',serif","바탕"],
+        ["Georgia,serif","Georgia"],
+        ["Arial,sans-serif","Arial"],
+        ["'Nanum Gothic',sans-serif","나눔고딕"],
+        ["'Nanum Myeongjo',serif","나눔명조"],
+        ["'Noto Sans KR',sans-serif","Noto Sans KR"],
+        ["'Noto Serif KR',serif","Noto Serif KR"],
+        ["'Black Han Sans',sans-serif","블랙한산스"],
+        ["'Nanum Pen Script',cursive","나눔펜"],
+        ["'Gaegu',cursive","개구체"],
+        ["'Sunflower',sans-serif","해바라기"],
+        ["'Playfair Display',serif","Playfair Display"],
+        ["'Montserrat',sans-serif","Montserrat"],
+        ["'Lato',sans-serif","Lato"],
+        ["'Raleway',sans-serif","Raleway"],
+        ["'Oswald',sans-serif","Oswald"],
+        ["'Dancing Script',cursive","Dancing Script"],
+      ];
+      const fontOptHtml=fontOpts.map(([v,l])=>`<option value="${v}" ${sel.ff===v?'selected':''}>${l}</option>`).join('');
+      const weightOpts=[['300','Light'],['400','Regular'],['500','Medium'],['700','Bold'],['800','ExtraBold']];
+      const weightOptHtml=weightOpts.map(([v,l])=>`<option value="${v}" ${(sel.fw||'400')===v?'selected':''}>${l}</option>`).join('');
+      const styleOptHtml=`<option value="normal" ${ (sel.fst||'normal')==='normal'?'selected':''}>Normal</option><option value="italic" ${(sel.fst||'normal')==='italic'?'selected':''}>Italic</option>`;
+      const iSt='width:100%;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:8px;color:#f5f5f2;font-size:14px;outline:none';
       h+=`<div style="margin-bottom:10px">
-        <div style="font-size:10px;color:#555;margin-bottom:3px">텍스트</div>
-        <textarea oninput="sel.txt=this.value;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none;min-height:56px;font-family:inherit;resize:none">${sel.txt}</textarea>
+        <div style="font-size:10px;color:#999;margin-bottom:3px">Text</div>
+        <textarea oninput="sel.txt=this.value;render()" style="${iSt};min-height:56px;font-family:inherit;resize:none">${sel.txt}</textarea>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:10px;color:#999;margin-bottom:3px">Font</div>
+        <select onchange="sel.ff=this.value;render()" style="${iSt}">${fontOptHtml}</select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">Weight</div>
+          <select onchange="sel.fw=this.value;render()" style="${iSt}">${weightOptHtml}</select></div>
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">Style</div>
+          <select onchange="sel.fst=this.value;render()" style="${iSt}">${styleOptHtml}</select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-        <div><div style="font-size:10px;color:#555;margin-bottom:3px">크기</div><input type="number" value="${sel.fs}" step="0.5" oninput="sel.fs=parseFloat(this.value)||14;render()" style="width:100%;background:#111;border:1px solid #222;border-radius:6px;padding:8px;color:#eee;font-size:14px;outline:none"></div>
-        <div><div style="font-size:10px;color:#555;margin-bottom:3px">색상</div><input type="color" value="${sel.col}" oninput="sel.col=this.value;render()" style="width:100%;height:40px;background:#111;border:1px solid #222;border-radius:6px;padding:2px;cursor:pointer"></div>
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">Size</div>
+          <input type="number" value="${sel.fs}" step="0.5" oninput="sel.fs=parseFloat(this.value)||14;render()" style="${iSt}"></div>
+        <div><div style="font-size:10px;color:#999;margin-bottom:3px">Color</div>
+          <input type="color" value="${sel.col}" oninput="sel.col=this.value;render()" style="width:100%;height:44px;background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:2px;cursor:pointer"></div>
       </div>`;
     }
-    const bs='background:#111;border:1px solid #222;border-radius:6px;padding:9px;font-size:12px;cursor:pointer;text-align:center';
-    h+=`<div style="font-size:10px;color:#555;margin-bottom:6px">빠른 정렬</div>
+    const bs='background:#f8f7f5;border:1px solid #e0ddd8;border-radius:6px;padding:9px;font-size:13px;cursor:pointer;text-align:center';
+    h+=`<div style="font-size:10px;color:#999;margin-bottom:6px">Quick align</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:4px">
-      <button style="${bs};color:#aaa" onclick="aln('L','L')">L⇤</button>
-      <button style="${bs};color:#aaa" onclick="aln('CX','L')">L↔</button>
-      <button style="${bs};color:#aaa" onclick="aln('CX','R')">R↔</button>
-      <button style="${bs};color:#aaa" onclick="aln('R','R')">R⇥</button>
+      <button style="${bs};color:#999" onclick="aln('L','L')">L⇤</button>
+      <button style="${bs};color:#999" onclick="aln('CX','L')">L↔</button>
+      <button style="${bs};color:#999" onclick="aln('CX','R')">R↔</button>
+      <button style="${bs};color:#999" onclick="aln('R','R')">R⇥</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:12px">
-      <button style="${bs};color:#aaa" onclick="aln('T','S')">⇡</button>
-      <button style="${bs};color:#aaa" onclick="aln('CY','S')">↕</button>
-      <button style="${bs};color:#aaa" onclick="aln('CX','S')">↔</button>
-      <button style="${bs};color:#aaa" onclick="aln('B','S')">⇣</button>
+      <button style="${bs};color:#999" onclick="aln('T','S')">↑</button>
+      <button style="${bs};color:#999" onclick="aln('CY','S')">⇕</button>
+      <button style="${bs};color:#999" onclick="aln('CX','S')">⇔</button>
+      <button style="${bs};color:#999" onclick="aln('B','S')">↓</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-      <button onclick="lyrUp()" style="${bs};color:#aaa">앞으로</button>
-      <button onclick="lyrDn()" style="${bs};color:#aaa">뒤로</button>
-      <button onclick="delEl();closeSheet()" style="${bs};color:#d05555;border-color:#5a2020">삭제</button>
-    </div>`;
+      <button onclick="lyrUp()" style="${bs};color:#999">Forward</button>
+      <button onclick="lyrDn()" style="${bs};color:#999">Backward</button>
+      <button onclick="delEl();closeSheet()" style="${bs};color:#d05555;border-color:#f5b0a8">Delete</button>
+    </div>
+    <div style="height:1px;background:#e8e4de;margin:14px 0"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="saveJSON()" style="background:#f5f5f2;border:1px solid #e0ddd8;border-radius:8px;padding:12px;font-size:14px;font-weight:600;color:#444;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="8" width="6" height="4" rx="0.5" fill="currentColor" opacity=".5"/><rect x="4" y="2" width="5" height="3" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+        Save
+      </button>
+      <button onclick="document.getElementById('fi-json').click()" style="background:#f5f5f2;border:1px solid #e0ddd8;border-radius:8px;padding:12px;font-size:14px;font-weight:600;color:#444;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M2 12h10M7 2v8M4 6l3 4 3-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Load
+      </button>
+    </div>
+    <button onclick="clearAllConfirm()" style="width:100%;background:#fff0f0;border:1.5px solid #f5b0a8;border-radius:8px;padding:13px;font-size:14px;font-weight:700;color:#d05555;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+      <svg width="15" height="15" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M5 4V3h4v1M5.5 6v5M8.5 6v5M4 4l.5 8h5L10 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Reset All
+    </button>`;
     body.innerHTML=h;
   }
   document.getElementById('m-sheet').classList.add('open');
@@ -738,7 +892,7 @@ function updatePanel(){
     document.getElementById('pw').value=sel.w.toFixed(1);
     document.getElementById('ph2').value=sel.h.toFixed(1);
     if(!sel._ratio)sel._ratio=sel.w/sel.h;
-    document.getElementById('btn-ratio').textContent=lockRatio?'🔒 비율 유지':'🔓 비율 해제';
+    document.getElementById('btn-ratio').textContent=lockRatio?'● Lock ratio':'○ Unlock ratio';
     document.getElementById('btn-ratio').style.background=lockRatio?'#1a56db':'#555';
     document.getElementById('ratio-val').textContent=sel._ratio?sel._ratio.toFixed(2)+':1':'';
   } else {
@@ -749,10 +903,12 @@ function updatePanel(){
     document.getElementById('scolor').value=sel.col;
     document.getElementById('sweight').value=sel.fw||'400';
     document.getElementById('sstyle').value=sel.fst||'normal';
+    document.getElementById('sbgcolor').value=sel.bgcol||'#ffffff';
+    document.getElementById('sbgon').checked=sel.bgon||false;
   }
   const rs=document.getElementById('refsel');
-  rs.innerHTML='<option value="">— 선택 —</option>';
-  spreads[cur].els.forEach((el,i)=>{if(el===sel)return;rs.innerHTML+=`<option value="${i}">${el.type==='txt'?`"${el.txt.slice(0,10)}"`:` 이미지${i+1}`}</option>`;});
+  rs.innerHTML='<option value="">— Select —</option>';
+  spreads[cur].els.forEach((el,i)=>{if(el===sel)return;rs.innerHTML+=`<option value="${i}">${el.type==='txt'?`"${el.txt.slice(0,10)}"`:` Image${i+1}`}</option>`;});
 }
 function fromPanel(){if(!sel)return;sel.x=parseFloat(document.getElementById('px').value)||0;sel.y=parseFloat(document.getElementById('py').value)||0;if(sel.type==='img'){sel.w=parseFloat(document.getElementById('pw').value)||10;sel.h=parseFloat(document.getElementById('ph2').value)||10;}else{sel.txt=document.getElementById('ptxt').value;sel.fs=parseFloat(document.getElementById('pfs').value)||14;}render();}
 function fromPanelW(){if(!sel||sel.type!=='img')return;const w=parseFloat(document.getElementById('pw').value)||10;sel.w=w;if(lockRatio&&sel._ratio){sel.h=w/sel._ratio;document.getElementById('ph2').value=sel.h.toFixed(1);}render();}
@@ -781,11 +937,11 @@ function alnRef(type){
   else if(type==='AL')sel.x=rb.x-sb.w;else if(type==='AT')sel.y=rb.y-sb.h;
   updatePanel();render();
 }
-function delEl(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>-1)e.splice(i,1);sel=null;updatePanel();render();}
+function delEl(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>-1)e.splice(i,1);sel=null;updatePanel();render();autoSave();}
 function lyrUp(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i<e.length-1){[e[i],e[i+1]]=[e[i+1],e[i]];render();}}
 function lyrDn(){if(!sel)return;const e=spreads[cur].els,i=e.indexOf(sel);if(i>0){[e[i],e[i-1]]=[e[i-1],e[i]];render();}}
-function clrSpread(){const[a,b]=pgl(cur);if(!confirm(`스프레드 ${a}·${b} 초기화?`))return;spreads[cur].els=[];sel=null;updatePanel();render();}
-function cpyAll(){if(!confirm('전체 복사?'))return;const src=spreads[cur].els;spreads.forEach((s,i)=>{if(i!==cur)s.els=src.map(el=>({...el}));});render();}
+function clrSpread(){const[a,b]=pgl(cur);if(!confirm(`Spread ${a}·${b} Reset?`))return;spreads[cur].els=[];sel=null;updatePanel();render();autoSave();}
+function cpyAll(){if(!confirm('Copy to all spreads?'))return;const src=spreads[cur].els;spreads.forEach((s,i)=>{if(i!==cur)s.els=src.map(el=>({...el}));});render();autoSave();}
 
 // ── 썸네일 ──
 const TW=40,TH=28;
@@ -814,9 +970,13 @@ function syncThumb(s){
 }
 function goTo(s){
   cur=s;sel=null;const[lp,rp]=pgl(s);
-  document.getElementById('spread-label').textContent=`스프레드 ${lp} · ${rp}`;
-  document.getElementById('d-status').textContent=`p${lp}·${rp}`;
-  document.getElementById('m-status').textContent=`p${lp}·${rp}`;
+  const isC=(typeof lp==='string');
+  document.getElementById('spread-label').textContent=isC?`${lp}  ·  ${rp}`:`Spread ${lp} · ${rp}`;
+  document.getElementById('spread-label').style.fontWeight=isC?'700':'400';
+  document.getElementById('spread-label').style.color=isC?'#1a56db':'';
+  document.getElementById('spread-label').style.fontSize=isC?'13px':'11px';
+  document.getElementById('d-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
+  document.getElementById('m-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
   document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===s));
   updatePanel();render();document.querySelectorAll('.sthumb')[s]?.scrollIntoView({block:'nearest'});
 }
@@ -864,10 +1024,163 @@ function exportPDF(){
   render();document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===cur));
 }
 
-// ── 초기화 ──
+
+// ── IndexedDB 자동Save ──
+const DB_NAME='BookEditorDB', DB_VER=1, STORE='spreads';
+let db=null;
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,DB_VER);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE,{keyPath:'id'});
+    };
+    req.onsuccess=e=>{db=e.target.result;resolve(db);};
+    req.onerror=e=>reject(e);
+  });
+}
+
+// Image img 객체를 base64로 직렬화
+function serializeEl(el){
+  if(el.type==='img'){
+    // img 객체 → base64 dataURL
+    const off=document.createElement('canvas');
+    off.width=el.img.naturalWidth||el.img.width;
+    off.height=el.img.naturalHeight||el.img.height;
+    const oc=off.getContext('2d');
+    oc.drawImage(el.img,0,0);
+    const dataUrl=off.toDataURL('image/jpeg',0.85);
+    return{...el,img:undefined,_dataUrl:dataUrl};
+  }
+  return{...el};
+}
+
+// base64 → img 객체로 역직렬화
+function deserializeEl(el){
+  return new Promise(resolve=>{
+    if(el.type==='img'&&el._dataUrl){
+      const img=new Image();
+      img.onload=()=>resolve({...el,img,_dataUrl:undefined});
+      img.onerror=()=>resolve(null);
+      img.src=el._dataUrl;
+    } else resolve(el);
+  });
+}
+
+// 자동Save (디바운스 500ms)
+let saveTimer=null;
+function autoSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>saveToIDB(),500);
+}
+
+async function saveToIDB(){
+  if(!db) return;
+  const tx=db.transaction(STORE,'readwrite');
+  const st=tx.objectStore(STORE);
+  // 기존 데이터 Delete 후 Save
+  st.clear();
+  for(let i=0;i<NS;i++){
+    const els=spreads[i].els.map(serializeEl);
+    st.put({id:i,els});
+  }
+  // 현재 Spread 인덱스도 Save
+  st.put({id:'meta',cur});
+  return new Promise(resolve=>tx.oncomplete=resolve);
+}
+
+async function loadFromIDB(){
+  if(!db) return false;
+  return new Promise(resolve=>{
+    const tx=db.transaction(STORE,'readonly');
+    const st=tx.objectStore(STORE);
+    const req=st.getAll();
+    req.onsuccess=async e=>{
+      const rows=e.target.result;
+      if(!rows||rows.length===0){resolve(false);return;}
+      let hasMeta=false;
+      for(const row of rows){
+        if(row.id==='meta'){cur=row.cur||0;hasMeta=true;continue;}
+        if(typeof row.id==='number'&&row.id<NS){
+          const els=await Promise.all(row.els.map(deserializeEl));
+          spreads[row.id].els=els.filter(Boolean);
+        }
+      }
+      resolve(hasMeta||rows.length>1);
+    };
+    req.onerror=()=>resolve(false);
+  });
+}
+
+function clearAllConfirm(){
+  if(!confirm('모든 작업 내용을 Delete하고 Reset할까요?\n이 작업은 되돌릴 수 없습니다.')) return;
+  spreads=Array.from({length:NS},()=>({els:[]}));
+  sel=null;cur=0;
+  if(db){
+    const tx=db.transaction(STORE,'readwrite');
+    tx.objectStore(STORE).clear();
+  }
+  goTo(0);updatePanel();render();
+}
+
+// ── JSON 내보내기/Load ──
+function saveJSON(){
+  const data={version:1,spreads:spreads.map(s=>({els:s.els.map(serializeEl)}))};
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='book_project.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function loadJSONFile(){
+  document.getElementById('fi-json').addEventListener('change',async function(){
+    const file=this.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=async ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.spreads){alert('Invalid project file.');return;}
+        if(!confirm('Overwrite current work and load?'))return;
+        spreads=Array.from({length:NS},()=>({els:[]}));
+        for(let i=0;i<Math.min(data.spreads.length,NS);i++){
+          const els=await Promise.all(data.spreads[i].els.map(deserializeEl));
+          spreads[i].els=els.filter(Boolean);
+        }
+        sel=null;cur=0;
+        await saveToIDB();
+        goTo(0);updatePanel();render();
+        alert('Load 완료!');
+      }catch(e){alert('Failed to read file: '+e.message);}
+    };
+    reader.readAsText(file);
+    this.value='';
+  },{once:false});
+}
+
+// ── Reset ──
 buildThumbs();
 initLayout();
-render();
+loadJSONFile();
+// IndexedDB 열고 Save된 데이터 복원
+openDB().then(async()=>{
+  const restored=await loadFromIDB();
+  if(restored){
+    const[lp,rp]=pgl(cur);
+    const isC=(typeof lp==='string');
+  document.getElementById('spread-label').textContent=isC?`${lp}  ·  ${rp}`:`Spread ${lp} · ${rp}`;
+  document.getElementById('spread-label').style.fontWeight=isC?'700':'400';
+  document.getElementById('spread-label').style.color=isC?'#1a56db':'';
+  document.getElementById('spread-label').style.fontSize=isC?'13px':'11px';
+    document.getElementById('d-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
+    document.getElementById('m-status').textContent=isC?`${lp} · ${rp}`:`p${lp}·${rp}`;
+    document.querySelectorAll('.sthumb').forEach((t,i)=>t.classList.toggle('on',i===cur));
+    updatePanel();
+  }
+  render();
+}).catch(()=>render());
 </script>
 </body>
 </html>
