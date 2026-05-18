@@ -202,7 +202,7 @@ select optgroup{background:#f5f5f2}
   </div>
   <div id="tb2">
     <label class="tl">Font</label>
-    <select class="ts" id="sfont" style="min-width:110px" onchange="applyTxtStyle()" style="width:110px">
+    <select class="ts" id="sfont" style="min-width:110px" oninput="applyTxtStyle()" style="width:110px">
       <optgroup label="시스템">
         <option value="'Malgun Gothic','Apple SD Gothic Neo',sans-serif">Malgun Gothic</option>
         <option value="'Batang','AppleMyungjo',serif">바탕</option>
@@ -228,22 +228,22 @@ select optgroup{background:#f5f5f2}
         <option value="'Dancing Script',cursive">Dancing Script</option>
       </optgroup>
     </select>
-    <label class="tl">Size</label><input class="tn" type="number" id="ssize" value="14" min="4" max="200" step="0.5" onchange="applyTxtStyle()">
-    <label class="tl">색</label><input class="tc" type="color" id="scolor" value="#000000" onchange="applyTxtStyle()">
+    <label class="tl">Size</label><input class="tn" type="number" id="ssize" value="14" min="4" max="200" step="0.5" oninput="applyTxtStyle()">
+    <label class="tl">색</label><input class="tc" type="color" id="scolor" value="#000000" oninput="applyTxtStyle()">
     <label class="tl">Weight</label>
-    <select class="ts" id="sweight" onchange="applyTxtStyle()" style="width:80px">
+    <select class="ts" id="sweight" oninput="applyTxtStyle()" style="width:80px">
       <option value="300">Light</option><option value="400" selected>Regular</option>
       <option value="500">Medium</option><option value="700">Bold</option><option value="800">ExtraBold</option>
     </select>
     <label class="tl">Style</label>
-    <select class="ts" id="sstyle" onchange="applyTxtStyle()" style="width:62px">
+    <select class="ts" id="sstyle" oninput="applyTxtStyle()" style="width:62px">
       <option value="normal" selected>Normal</option><option value="italic">Italic</option>
     </select>
     <div class="sep"></div>
     <label class="tl">Text BG</label>
-    <input class="tc" type="color" id="sbgcolor" value="#ffffff" onchange="applyTxtStyle()">
+    <input class="tc" type="color" id="sbgcolor" value="#ffffff" oninput="applyTxtStyle()">
     <label class="tl" style="display:flex;align-items:center;gap:4px;cursor:pointer">
-      <input type="checkbox" id="sbgon" onchange="applyTxtStyle()" style="width:16px;height:16px;cursor:pointer;accent-color:#1a56db">On
+      <input type="checkbox" id="sbgon" oninput="applyTxtStyle()" style="width:16px;height:16px;cursor:pointer;accent-color:#1a56db">On
     </label>
   </div>
 </div>
